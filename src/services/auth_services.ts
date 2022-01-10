@@ -1,4 +1,5 @@
 import { auth } from 'firebase';
+import app from './firebase';
 
 class AuthServices {
   login(providerName: 'google' | 'github') {
@@ -17,7 +18,7 @@ class AuthServices {
         break;
     }
     if (!authProvider) return;
-    return auth().signInWithPopup(authProvider);
+    return app.auth().signInWithPopup(authProvider);
   }
 }
 

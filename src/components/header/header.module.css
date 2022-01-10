@@ -1,0 +1,16 @@
+.header {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 0.5em;
+}
+
+.logo {
+  width: 3em;
+}
+
+.title {
+  margin: 0;
+  @apply px-4 py-2 rounded font-semibold bg-gray-200 text-black;
+  @apply px-4;
+}
