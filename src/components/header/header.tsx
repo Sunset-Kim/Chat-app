@@ -7,15 +7,18 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   return (
-    <header className="container relative mx-auto px-4 flex bg-slate-200">
+    <header className={styles.header}>
       {/* logout */}
       {onLogout && (
-        <button onClick={onLogout} className="absolute top-4 right-5">
+        <button
+          className={styles.btn__logout + ' btn-secondary'}
+          onClick={onLogout}
+        >
           Logout
         </button>
       )}
-      <img className="w-200 mr-4" src="/images/logo.png" alt="logo" />
-      <h1 className="flex-grow flex items-center ">비즈니스 카드 메이커</h1>
+      <img className="w-20 mr-4" src="/images/logo.png" alt="logo" />
+      <h1 className={styles.title}>비즈니스 카드 메이커</h1>
     </header>
   );
 };

@@ -1,16 +1,12 @@
 .header {
-  position: relative;
-  width: 100%;
-  text-align: center;
-  padding: 0.5em;
+  @apply container relative mx-auto px-4 flex py-2;
 }
 
-.logo {
-  width: 3em;
+.btn__logout {
+  @apply absolute top-4 right-5 px-2 py-1 text-sm;
 }
 
 .title {
   margin: 0;
-  @apply px-4 py-2 rounded font-semibold bg-gray-200 text-black;
-  @apply px-4;
+  @apply flex flex-1 text-lg items-center font-semibold text-black;
 }

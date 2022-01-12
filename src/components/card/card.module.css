@@ -1,0 +1,11 @@
+.card {
+  @apply w-full bg-purple-500 rounded-3xl flex p-4 mb-2;
+}
+
+.card__img {
+  @apply flex-1 mr-5;
+}
+
+.card__text {
+  @apply flex-1 text-sm text-slate-100;
+}

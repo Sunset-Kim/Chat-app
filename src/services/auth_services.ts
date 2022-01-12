@@ -1,7 +1,8 @@
-import { auth } from 'firebase';
+import firebase, { auth } from 'firebase';
 import app from './firebase';
 
 class AuthServices {
+  // login
   login(providerName: 'google' | 'github') {
     // 1. provider 선택
     let authProvider;
@@ -17,8 +18,25 @@ class AuthServices {
         throw 'Auth Provider not exist';
         break;
     }
+
     if (!authProvider) return;
+
     return app.auth().signInWithPopup(authProvider);
+  }
+
+  // logout
+  logout() {
+    return app.auth().signOut();
+  }
+
+  getUser() {
+    return app.auth().currentUser;
+  }
+
+  onAuthChange(onUserChanged: (user: firebase.User | null) => void) {
+    app.auth().onAuthStateChanged(user => {
+      onUserChanged(user);
+    });
   }
 }
 

@@ -1,11 +1,12 @@
 import React from 'react';
-import Login from './components/login/login';
+import { RecoilRoot } from 'recoil';
+import Router from './router';
 
 function App() {
   return (
-    <div>
-      <Login />
-    </div>
+    <RecoilRoot>
+      <Router />
+    </RecoilRoot>
   );
 }
 
