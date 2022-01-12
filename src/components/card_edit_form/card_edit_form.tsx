@@ -1,8 +1,31 @@
-import React, { ReactEventHandler, useCallback } from 'react';
+import React, { ReactEventHandler, useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { cardsAtom, ICardInfo } from '../../state/data';
+import { imageUploadeAtom } from '../../state/uploader';
 import './card_edit_form.module.css';
+
+interface IImageResponse {
+  asset_id: string;
+  public_id: string;
+  version: number;
+  version_id: string;
+  signature: string;
+  width: number;
+  height: number;
+  format: string;
+  resource_type: string;
+  created_at: string;
+  tags: object;
+  bytes: number;
+  type: string;
+  etag: string;
+  placeholder: boolean;
+  url: string;
+  secure_url: string;
+  access_mode: string;
+  original_filename: string;
+}
 
 interface CardEditFormProps {
   card: ICardInfo;
@@ -10,12 +33,15 @@ interface CardEditFormProps {
 
 const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
   const [cards, setCards] = useRecoilState(cardsAtom);
+  const imageUploader = useRecoilValue(imageUploadeAtom);
+  const [loading, setLoading] = useState(false);
   const currentCard = cards && cards[`${card.id}`];
   const { register } = useForm();
 
   if (currentCard) {
     const { id, name, message, email, company, fileName, fileURL } =
       currentCard;
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const onDelete = useCallback<
       (e: React.SyntheticEvent<HTMLButtonElement>) => void
@@ -41,6 +67,26 @@ const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
       setCards(prev => {
         const updated = { ...prev };
         updated[card.id] = { ...currentCard, [currentName]: currentValue };
+        console.log(updated[card.id]);
+        return updated;
+      });
+    }, []);
+
+    const onFileChange = useCallback<
+      (e: React.SyntheticEvent<HTMLInputElement>) => void
+    >(async e => {
+      if (!e.currentTarget.files) return;
+      setLoading(true);
+      const file = e.currentTarget.files[0];
+      const result: IImageResponse = await imageUploader.upload(file);
+      setLoading(false);
+      setCards(prev => {
+        const updated = { ...prev };
+        updated[card.id] = {
+          ...currentCard,
+          fileURL: result.url,
+          fileName: result.original_filename,
+        };
         console.log(updated[card.id]);
         return updated;
       });
@@ -94,15 +140,26 @@ const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
             <label className="flex-1 basis-1/2">
               <span className="sr-only">Choose profile photo</span>
               <input
+                ref={fileInputRef}
                 type="file"
                 name="file"
-                className="text-sm text-gray-500
-        file:mr-4 file:py-2 file:px-4
-        file:rounded-full file:border-0
-        file:text-sm file:font-semibold
-        file:bg-violet-50 file:text-violet-700
-        hover:file:bg-violet-100 file:cursor-pointer cursor-pointer"
+                accept="image/*"
+                onChange={onFileChange}
+                className="hidden"
               />
+
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-full flex justify-center items-center bg-slate-600 rounded-lg text-white disabled:bg-red-400 transition-colors"
+              >
+                {loading ? (
+                  <span className="w-4 h-4 rounded-full border-2 border-t-red-800 animate-spin"></span>
+                ) : (
+                  fileName
+                )}
+              </button>
             </label>
             <button className="btn-delete flex-1 basis-1/3" onClick={onDelete}>
               Delete
