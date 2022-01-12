@@ -1,38 +1,56 @@
-import React, { ReactEventHandler } from 'react';
+import React, { ReactEventHandler, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { cardsAtom, ICardInfo } from '../../state/data';
+import { isImgLoadingAtom } from '../../state/uploader';
+import InputFile from '../input_file/input_file';
 
 const CardAddForm = () => {
+  const [file, setFile] = useState<{
+    fileName: string;
+    fileURL: string;
+  } | null>(null);
   const [cards, setCards] = useRecoilState(cardsAtom);
+  const isImgLoading = useRecoilValue(isImgLoadingAtom);
+  const { handleSubmit, register, reset } = useForm();
 
   const onSubmit: SubmitHandler<HTMLFormElement> = data => {
-    console.log(data, '등록');
+    if (isImgLoading) {
+      return alert('이미지를 업로드 하는 중입니다.');
+    } else {
+      const cardInfo: ICardInfo = {
+        id: Date.now(),
+        title: data.title,
+        theme: data.theme,
+        name: data.name,
+        company: data.company,
+        email: data.email,
+        message: data?.message,
+        fileName: file?.fileName ?? '',
+        fileURL: file?.fileURL ?? '',
+      };
 
-    const cardInfo: ICardInfo = {
-      id: Date.now(),
-      title: data.title,
-      theme: data.theme,
-      name: data.name,
-      fileName: data.picture.length > 0 && data.picture[0].name,
-      fileURL: data.picture.length > 0 && data.picture[0],
-      company: data.company,
-      email: data.email,
-      message: data?.message,
-    };
+      const newCard: { [key: string]: ICardInfo } = {};
+      newCard[`${cardInfo.id}`] = cardInfo;
 
-    const newCard: { [key: string]: ICardInfo } = {};
-    newCard[`${cardInfo.id}`] = cardInfo;
+      setCards(prev => {
+        if (prev) {
+          return { ...prev, ...newCard };
+        } else {
+          return { ...newCard };
+        }
+      });
 
-    setCards(prev => {
-      if (prev) {
-        return { ...prev, ...newCard };
-      } else {
-        return { ...newCard };
-      }
-    });
+      reset();
+    }
   };
-  const { handleSubmit, register } = useForm();
+
+  const onFileChange: (fileName: string, url: string) => void = (
+    fileName,
+    fileURL,
+  ) => {
+    setFile({ fileName, fileURL });
+  };
 
   return (
     <div>
@@ -78,19 +96,7 @@ const CardAddForm = () => {
         </div>
 
         <div className="flex-1 flex">
-          <label className="flex-1 basis-1/2">
-            <span className="sr-only">Choose profile photo</span>
-            <input
-              {...register('picture')}
-              type="file"
-              className="text-sm text-gray-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold
-      file:bg-violet-50 file:text-violet-700
-      hover:file:bg-violet-100 file:cursor-pointer cursor-pointer"
-            />
-          </label>
+          <InputFile onFileChange={onFileChange} />
           <button className="btn-delete flex-1 basis-1/3" type="submit">
             Add
           </button>

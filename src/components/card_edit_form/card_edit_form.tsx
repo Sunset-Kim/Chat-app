@@ -1,31 +1,10 @@
-import React, { ReactEventHandler, useCallback, useRef, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { cardsAtom, ICardInfo } from '../../state/data';
-import { imageUploadeAtom } from '../../state/uploader';
+import { isImgLoadingAtom } from '../../state/uploader';
+import InputFile from '../input_file/input_file';
 import './card_edit_form.module.css';
-
-interface IImageResponse {
-  asset_id: string;
-  public_id: string;
-  version: number;
-  version_id: string;
-  signature: string;
-  width: number;
-  height: number;
-  format: string;
-  resource_type: string;
-  created_at: string;
-  tags: object;
-  bytes: number;
-  type: string;
-  etag: string;
-  placeholder: boolean;
-  url: string;
-  secure_url: string;
-  access_mode: string;
-  original_filename: string;
-}
 
 interface CardEditFormProps {
   card: ICardInfo;
@@ -33,20 +12,19 @@ interface CardEditFormProps {
 
 const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
   const [cards, setCards] = useRecoilState(cardsAtom);
-  const imageUploader = useRecoilValue(imageUploadeAtom);
-  const [loading, setLoading] = useState(false);
+  const isImgLoading = useRecoilValue(isImgLoadingAtom);
   const currentCard = cards && cards[`${card.id}`];
   const { register } = useForm();
 
   if (currentCard) {
     const { id, name, message, email, company, fileName, fileURL } =
       currentCard;
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const onDelete = useCallback<
       (e: React.SyntheticEvent<HTMLButtonElement>) => void
     >(e => {
       e.preventDefault();
+      if (isImgLoadingAtom) return alert('이미지를 교체 중 입니다.');
       setCards(prev => {
         if (!prev) return prev;
 
@@ -72,25 +50,20 @@ const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
       });
     }, []);
 
-    const onFileChange = useCallback<
-      (e: React.SyntheticEvent<HTMLInputElement>) => void
-    >(async e => {
-      if (!e.currentTarget.files) return;
-      setLoading(true);
-      const file = e.currentTarget.files[0];
-      const result: IImageResponse = await imageUploader.upload(file);
-      setLoading(false);
-      setCards(prev => {
-        const updated = { ...prev };
-        updated[card.id] = {
-          ...currentCard,
-          fileURL: result.url,
-          fileName: result.original_filename,
-        };
-        console.log(updated[card.id]);
-        return updated;
-      });
-    }, []);
+    const onFileChange = useCallback<(fileName: string, url: string) => void>(
+      (fileName, fileURL) => {
+        setCards(prev => {
+          const updated = { ...prev };
+          updated[card.id] = {
+            ...currentCard,
+            fileURL,
+            fileName,
+          };
+          return updated;
+        });
+      },
+      [],
+    );
 
     return (
       <div className="w-full p-2 mb-4 border">
@@ -137,30 +110,7 @@ const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
           </div>
 
           <div className="flex-1 flex">
-            <label className="flex-1 basis-1/2">
-              <span className="sr-only">Choose profile photo</span>
-              <input
-                ref={fileInputRef}
-                type="file"
-                name="file"
-                accept="image/*"
-                onChange={onFileChange}
-                className="hidden"
-              />
-
-              <button
-                type="button"
-                disabled={loading}
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-full flex justify-center items-center bg-slate-600 rounded-lg text-white disabled:bg-red-400 transition-colors"
-              >
-                {loading ? (
-                  <span className="w-4 h-4 rounded-full border-2 border-t-red-800 animate-spin"></span>
-                ) : (
-                  fileName
-                )}
-              </button>
-            </label>
+            <InputFile fileName={fileName} onFileChange={onFileChange} />
             <button className="btn-delete flex-1 basis-1/3" onClick={onDelete}>
               Delete
             </button>
