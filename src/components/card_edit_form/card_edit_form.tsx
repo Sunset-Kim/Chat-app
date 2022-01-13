@@ -24,7 +24,7 @@ const CardEditForm: React.FC<CardEditFormProps> = ({ card }) => {
       (e: React.SyntheticEvent<HTMLButtonElement>) => void
     >(e => {
       e.preventDefault();
-      if (isImgLoadingAtom) return alert('이미지를 교체 중 입니다.');
+      if (isImgLoading) return alert('이미지를 교체 중 입니다.');
       setCards(prev => {
         if (!prev) return prev;
 
