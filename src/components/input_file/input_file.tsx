@@ -31,7 +31,6 @@ interface InputFileProps {
 
 const InputFile: React.FC<InputFileProps> = ({ fileName, onFileChange }) => {
   const imageUploader = useRecoilValue(imageUploadeAtom);
-  const [name, setName] = useState(fileName);
   const [loading, setLoading] = useState(false);
   const setIsImgLoading = useSetRecoilState(isImgLoadingAtom);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +43,6 @@ const InputFile: React.FC<InputFileProps> = ({ fileName, onFileChange }) => {
     const result: IImageResponse = await imageUploader.upload(file);
     setLoading(false);
     setIsImgLoading(false);
-    setName(result.original_filename);
     onFileChange(result.original_filename, result.url);
   };
 
@@ -69,7 +67,7 @@ const InputFile: React.FC<InputFileProps> = ({ fileName, onFileChange }) => {
         {loading ? (
           <span className="w-4 h-4 rounded-full border-2 border-t-red-800 animate-spin"></span>
         ) : (
-          <span>{fileName || name || 'Add'}</span>
+          <span>{fileName || 'Add'}</span>
         )}
       </button>
     </label>

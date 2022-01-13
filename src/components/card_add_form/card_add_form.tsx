@@ -1,7 +1,9 @@
-import React, { ReactEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { cardsAtom, ICardInfo } from '../../state/data';
+import { useRecoilValue } from 'recoil';
+import { DatabaseService } from '../../services/database';
+import { userIdAtom } from '../../state/auth';
+import { ICardInfo } from '../../state/data';
 import { isImgLoadingAtom } from '../../state/uploader';
 import InputFile from '../input_file/input_file';
 
@@ -10,39 +12,31 @@ const CardAddForm = () => {
     fileName: string;
     fileURL: string;
   } | null>(null);
-  const [cards, setCards] = useRecoilState(cardsAtom);
+  const userId = useRecoilValue(userIdAtom);
   const isImgLoading = useRecoilValue(isImgLoadingAtom);
   const { handleSubmit, register, reset } = useForm();
+  const databaseService = new DatabaseService();
 
   const onSubmit: SubmitHandler<HTMLFormElement> = data => {
-    if (isImgLoading) {
-      return alert('이미지를 업로드 하는 중입니다.');
-    } else {
-      const cardInfo: ICardInfo = {
-        id: Date.now(),
-        title: data.title,
-        theme: data.theme,
-        name: data.name,
-        company: data.company,
-        email: data.email,
-        message: data?.message,
-        fileName: file?.fileName ?? '',
-        fileURL: file?.fileURL ?? '',
-      };
+    if (isImgLoading) return alert('이미지를 업로드 하는 중입니다.');
+    if (!userId) return alert('로그인 정보 오류');
 
-      const newCard: { [key: string]: ICardInfo } = {};
-      newCard[`${cardInfo.id}`] = cardInfo;
+    const cardInfo: ICardInfo = {
+      id: Date.now(),
+      title: data.title ?? '',
+      theme: data.theme ?? '',
+      name: data.name ?? '',
+      company: data.company ?? '',
+      email: data.email ?? '',
+      message: data?.message ?? '',
+      fileName: file?.fileName ?? '',
+      fileURL: file?.fileURL ?? '',
+    };
 
-      setCards(prev => {
-        if (prev) {
-          return { ...prev, ...newCard };
-        } else {
-          return { ...newCard };
-        }
-      });
+    databaseService.addCard(userId, cardInfo);
 
-      reset();
-    }
+    reset();
+    setFile(null);
   };
 
   const onFileChange: (fileName: string, url: string) => void = (
@@ -96,7 +90,7 @@ const CardAddForm = () => {
         </div>
 
         <div className="flex-1 flex">
-          <InputFile onFileChange={onFileChange} />
+          <InputFile fileName={file?.fileName} onFileChange={onFileChange} />
           <button className="btn-delete flex-1 basis-1/3" type="submit">
             Add
           </button>

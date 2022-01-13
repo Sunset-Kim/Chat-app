@@ -1,19 +1,21 @@
 import React, { ReactEventHandler, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { authServiceAtom } from '../../state/auth';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { authServiceAtom, userAtom } from '../../state/auth';
 
 const Login = () => {
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
   const authService = useRecoilValue(authServiceAtom);
 
   const onLogin: ReactEventHandler<HTMLButtonElement> = e => {
     const loginType = e.currentTarget.dataset.login as 'google' | 'github';
     authService
       .login(loginType)
-      ?.then(result =>
-        localStorage.setItem('user', JSON.stringify(result.user)),
-      )
+      ?.then(result => {
+        setUser(result.user);
+        localStorage.setItem('user', JSON.stringify(result.user));
+      })
       .catch(error => console.log('로그인 에러', error));
   };
 

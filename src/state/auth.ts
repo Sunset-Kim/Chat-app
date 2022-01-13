@@ -13,4 +13,10 @@ export const authServiceAtom = atom({
 export const userAtom = atom<null | firebase.User>({
   key: 'user',
   default: user,
+  dangerouslyAllowMutability: true,
+});
+
+export const userIdAtom = selector({
+  key: 'userID',
+  get: ({ get }) => get(userAtom)?.uid,
 });

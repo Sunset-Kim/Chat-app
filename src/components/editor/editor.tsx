@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { cardsAtom } from '../../state/data';
 import CardAddForm from '../card_add_form/card_add_form';
-
 import CardEditForm from '../card_edit_form/card_edit_form';
+import { ICardInfo, localCardsAtom } from '../../state/data';
 
 const Editor = () => {
-  const cards = useRecoilValue(cardsAtom);
+  const localCards = useRecoilValue(localCardsAtom);
 
   return (
     <div className="flex-1 basis-1/2 p-2 bg-emerald-400">
-      {cards &&
-        Object.values(cards).map(card => (
-          <CardEditForm key={card.id} card={card}>
-            {card.title}
-          </CardEditForm>
+      {localCards &&
+        Object.values(localCards).map(card => (
+          <CardEditForm key={card.id} card={card} />
         ))}
       <CardAddForm />
     </div>

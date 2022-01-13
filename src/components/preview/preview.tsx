@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { cardsAtom } from '../../state/data';
+import { CardsDatabase, localCardsAtom } from '../../state/data';
 import Card from '../card/card';
 
 const Preview = () => {
-  const cards = useRecoilValue(cardsAtom);
+  const localCards = useRecoilValue(localCardsAtom);
 
   return (
     <ul className="flex-1 basis-1/2 bg-emerald-200 p-3">
-      {cards &&
-        Object.values(cards).map(card => (
+      {localCards &&
+        Object.values(localCards).map(card => (
           <Card key={card.id} card={card}></Card>
         ))}
     </ul>

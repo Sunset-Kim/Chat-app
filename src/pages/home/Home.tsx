@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import Editor from '../../components/editor/editor';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import Preview from '../../components/preview/preview';
-import { authServiceAtom, userAtom } from '../../state/auth';
+import { DatabaseService } from '../../services/database';
+import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
+import { cardsAtom, CardsDatabase, localCardsAtom } from '../../state/data';
 
 const Home = () => {
   const navigate = useNavigate();
   const authService = useRecoilValue(authServiceAtom);
-  const user = useRecoilValue(userAtom);
-
-  console.log(user);
+  const [user, setUser] = useRecoilState(userAtom);
+  const userId = useRecoilValue(userIdAtom);
+  const database = new DatabaseService();
+  const [cards, setCards] = useRecoilState(cardsAtom);
 
   const onLogout = () => {
-    authService.logout().then(result => localStorage.setItem('user', ''));
+    authService.logout().then(result => {
+      localStorage.setItem('user', '');
+      setUser(null);
+    });
   };
 
+  const onUpdate = (value: CardsDatabase) => {
+    console.log('변화', value);
+    setCards(value);
+  };
+
+  // useEffect
+
+  // 01 . login check
   useEffect(() => {
     authService.onAuthChange(user => !user && navigate('/login'));
-  }, []);
+  }, [user]);
+
+  // 02. realtime database
+  useEffect(() => {
+    if (!userId) return;
+    const syncFunc = database.syncCards(userId, onUpdate);
+    return () => syncFunc;
+  }, [userId]);
 
   return (
     <div>

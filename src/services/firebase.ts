@@ -8,6 +8,8 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  databaseURL:
+    'https://business-card-maker-6eef1-default-rtdb.asia-southeast1.firebasedatabase.app/',
 };
 
 const app = initializeApp(firebaseConfig);

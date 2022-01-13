@@ -1,4 +1,8 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
+import { DatabaseService } from '../services/database';
+import { userAtom } from './auth';
+
+const databaseService = new DatabaseService();
 
 export interface ICardInfo {
   id: number;
@@ -12,38 +16,24 @@ export interface ICardInfo {
   fileURL?: string;
 }
 
-export const cardsAtom = atom<{ [key: string]: ICardInfo } | null>({
+export type CardsDatabase = null | { [key: string]: ICardInfo };
+
+export const localCardsAtom = atom<CardsDatabase>({
+  key: 'localCards',
+  default: {},
+});
+
+export const cardsAtom = selector<CardsDatabase>({
   key: 'cards',
-  default: {
-    1: {
-      id: 1,
-      name: 'elei',
-      company: 'samsung',
-      theme: 'light',
-      title: '안녕',
-      email: 'wwfw@sdf',
-      message: 'go for it',
-      fileName: 'go sld',
-    },
-    2: {
-      id: 2,
-      name: 'elei',
-      company: 'samsung',
-      theme: 'light',
-      title: '안녕',
-      email: 'wwfw@sdf',
-      message: 'go for it',
-      fileName: 'go sld',
-    },
-    3: {
-      id: 3,
-      name: 'elei',
-      company: 'samsung',
-      theme: 'light',
-      title: '안녕',
-      email: 'wwfw@sdf',
-      message: 'go for it',
-      fileName: 'go sld',
-    },
+  get: async ({ get }) => {
+    const userID = get(userAtom)?.uid;
+    if (!userID) return {};
+    const result = await databaseService.getCardData(userID);
+    return result.val();
+  },
+
+  set: ({ set }, newValue) => {
+    console.log(newValue);
+    set(localCardsAtom, newValue);
   },
 });
