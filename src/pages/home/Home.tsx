@@ -25,7 +25,6 @@ const Home = () => {
   };
 
   const onUpdate = (value: CardsDatabase) => {
-    console.log('변화', value);
     setCards(value);
   };
 
@@ -40,7 +39,10 @@ const Home = () => {
   useEffect(() => {
     if (!userId) return;
     const syncFunc = database.syncCards(userId, onUpdate);
-    return () => syncFunc;
+
+    return () => {
+      syncFunc();
+    };
   }, [userId]);
 
   return (

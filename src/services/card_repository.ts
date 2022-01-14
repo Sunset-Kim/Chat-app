@@ -1,6 +1,6 @@
 import { CardsDatabase, ICardInfo } from '../state/data';
 import { database } from './firebase';
-import { ref, set, remove, onValue, get, child } from 'firebase/database';
+import { ref, set, remove, onValue, get, child, off } from 'firebase/database';
 
 export class DatabaseService {
   addCard(userID: string, cards: ICardInfo) {
@@ -19,17 +19,12 @@ export class DatabaseService {
       const value = snapshot.val();
       onUpdate(value);
     });
+
+    return () => off(cardRef);
   }
 
-  getCardData(userID: string, onUpdate: (value: CardsDatabase | null) => void) {
-    get(child(ref(database), `cards/${userID}`))
-      .then(snapshot => {
-        if (snapshot.exists()) {
-          onUpdate(snapshot.val());
-        } else {
-          onUpdate(null);
-        }
-      })
-      .catch(error => console.log(error));
+  async getCardData(userID: string) {
+    const result = await get(child(ref(database), `cards/${userID}`));
+    return result.val();
   }
 }
