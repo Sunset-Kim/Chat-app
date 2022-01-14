@@ -25,16 +25,15 @@ export const localCardsAtom = atom<CardsDatabase>({
 
 export const cardsAtom = selector<CardsDatabase>({
   key: 'cards',
+
   get: ({ get }) => {
     const userID = get(userAtom)?.uid;
     if (!userID) return {};
-    let results: any;
-    databaseService.getCardData(userID, () => results);
-    return results;
+    const result = databaseService.getCardData(userID);
+    return result;
   },
 
   set: ({ set }, newValue) => {
-    console.log(newValue);
     set(localCardsAtom, newValue);
   },
 });
