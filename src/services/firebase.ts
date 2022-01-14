@@ -1,4 +1,6 @@
-import { initializeApp, analytics } from 'firebase';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -12,7 +14,6 @@ const firebaseConfig = {
     'https://business-card-maker-6eef1-default-rtdb.asia-southeast1.firebasedatabase.app/',
 };
 
-const app = initializeApp(firebaseConfig);
-const appAnalytics = analytics(app);
-
-export default app;
+export const firebaseApp = initializeApp(firebaseConfig);
+export const auth = getAuth(firebaseApp);
+export const database = getDatabase(firebaseApp);

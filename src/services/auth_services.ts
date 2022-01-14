@@ -1,5 +1,11 @@
-import firebase, { auth } from 'firebase';
-import app from './firebase';
+import {
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  User,
+} from 'firebase/auth';
+import { auth } from './firebase';
 
 class AuthServices {
   // login
@@ -8,10 +14,10 @@ class AuthServices {
     let authProvider;
     switch (providerName) {
       case 'google':
-        authProvider = new auth.GoogleAuthProvider();
+        authProvider = new GoogleAuthProvider();
         break;
       case 'github':
-        authProvider = new auth.GithubAuthProvider();
+        authProvider = new GithubAuthProvider();
 
         break;
       default:
@@ -21,20 +27,20 @@ class AuthServices {
 
     if (!authProvider) return;
 
-    return app.auth().signInWithPopup(authProvider);
+    return signInWithPopup(auth, authProvider);
   }
 
   // logout
   logout() {
-    return app.auth().signOut();
+    return auth.signOut();
   }
 
   getUser() {
-    return app.auth().currentUser;
+    return auth.currentUser;
   }
 
-  onAuthChange(onUserChanged: (user: firebase.User | null) => void) {
-    app.auth().onAuthStateChanged(user => {
+  onAuthChange(onUserChanged: (user: User | null) => void) {
+    onAuthStateChanged(auth, user => {
       onUserChanged(user);
     });
   }

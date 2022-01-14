@@ -1,7 +1,7 @@
 import React, { ReactEventHandler } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { DatabaseService } from '../../services/database';
+import { DatabaseService } from '../../services/card_repository';
 import { userIdAtom } from '../../state/auth';
 import { ICardInfo, localCardsAtom } from '../../state/data';
 import { isImgLoadingAtom } from '../../state/uploader';

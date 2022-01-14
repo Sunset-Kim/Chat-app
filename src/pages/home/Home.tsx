@@ -5,7 +5,7 @@ import Editor from '../../components/editor/editor';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import Preview from '../../components/preview/preview';
-import { DatabaseService } from '../../services/database';
+import { DatabaseService } from '../../services/card_repository';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
 import { cardsAtom, CardsDatabase, localCardsAtom } from '../../state/data';
 

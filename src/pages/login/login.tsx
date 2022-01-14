@@ -1,6 +1,6 @@
 import React, { ReactEventHandler, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authServiceAtom, userAtom } from '../../state/auth';
 
 const Login = () => {

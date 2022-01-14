@@ -1,7 +1,7 @@
 import React, { useState, memo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
-import { DatabaseService } from '../../services/database';
+import { DatabaseService } from '../../services/card_repository';
 import { userIdAtom } from '../../state/auth';
 import { ICardInfo } from '../../state/data';
 import { isImgLoadingAtom } from '../../state/uploader';

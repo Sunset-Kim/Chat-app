@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { DatabaseService } from '../services/database';
+import { DatabaseService } from '../services/card_repository';
 import { userAtom } from './auth';
 
 const databaseService = new DatabaseService();
@@ -25,11 +25,12 @@ export const localCardsAtom = atom<CardsDatabase>({
 
 export const cardsAtom = selector<CardsDatabase>({
   key: 'cards',
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const userID = get(userAtom)?.uid;
     if (!userID) return {};
-    const result = await databaseService.getCardData(userID);
-    return result.val();
+    let results: any;
+    databaseService.getCardData(userID, () => results);
+    return results;
   },
 
   set: ({ set }, newValue) => {
