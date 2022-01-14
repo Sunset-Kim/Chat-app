@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
 import { DatabaseService } from '../../services/database';
@@ -100,4 +100,4 @@ const CardAddForm = () => {
   );
 };
 
-export default CardAddForm;
+export default memo(CardAddForm);
