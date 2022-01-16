@@ -1,5 +1,5 @@
 import React, { ReactEventHandler, useRef, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { imageUploadeAtom, isImgLoadingAtom } from '../../state/uploader';
 
 interface IImageResponse {
