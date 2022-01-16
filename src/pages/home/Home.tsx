@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import Channel from '../../components/channel/channel';
 import Header from '../../components/header/header';
 import Lnb from '../../components/lnb/lnb';
 import { DatabaseService } from '../../services/card_repository';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
-import { cardsAtom, CardsDatabase, localCardsAtom } from '../../state/data';
+import { cardsAtom, CardsDatabase } from '../../state/data';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,7 +48,9 @@ const Home = () => {
       <Header onLogout={onLogout} />
       <main className="w-full h-full flex pt-14 overflow-hidden">
         <Lnb />
-        <Channel />
+        <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-2 text-neutral-800">
+          <Outlet />
+        </div>
 
         {/* <aside className="absolute bottom-0 left-0 w-full h-fit">
           <InputCard />
