@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import Editor from '../../components/editor/editor';
-import Footer from '../../components/footer/footer';
+import Channel from '../../components/channel/channel';
 import Header from '../../components/header/header';
-import Preview from '../../components/preview/preview';
+import Lnb from '../../components/lnb/lnb';
 import { DatabaseService } from '../../services/card_repository';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
 import { cardsAtom, CardsDatabase, localCardsAtom } from '../../state/data';
@@ -46,14 +45,16 @@ const Home = () => {
   }, [userId]);
 
   return (
-    <div>
+    <div className="w-full h-full">
       <Header onLogout={onLogout} />
-      <section className="container flex m-auto px-4 flex-col sm:flex-row">
-        <Editor />
-        <Preview />
-      </section>
-      <Footer />
-      <span>{user?.uid}</span>
+      <main className="w-full h-full flex pt-14 overflow-hidden">
+        <Lnb />
+        <Channel />
+
+        {/* <aside className="absolute bottom-0 left-0 w-full h-fit">
+          <InputCard />
+        </aside> */}
+      </main>
     </div>
   );
 };

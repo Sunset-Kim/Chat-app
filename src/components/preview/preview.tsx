@@ -7,7 +7,7 @@ const Preview = () => {
   const cards = useRecoilValue(localCardsAtom);
 
   return (
-    <ul className="flex-1 basis-1/2 bg-emerald-200 p-3">
+    <ul className="w-full h-full relative">
       {cards &&
         Object.values(cards).map(card => (
           <Card key={card.id} card={card}></Card>

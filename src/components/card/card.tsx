@@ -13,17 +13,46 @@ const Card: React.FC<CardProps> = ({ card }) => {
     card;
   const url = fileURL || DEFAULT_IMG;
   return (
-    <li className={styles.card}>
-      <div className={styles.card__img}>
-        <img className="w-full" src={url} alt="profile photo" />
+    <li className="flex">
+      {/* 프로필 이미지 */}
+      <div className="h-12 w-12 mr-2">
+        <img
+          className="block w-full h-full object-scale-down object-center bg-rose-200 rounded"
+          src="/images/default_logo.png"
+          alt="profile"
+        />
       </div>
-      <div className={styles.card__text}>
-        <h1 className="text-2xl font-bold font-display">{name}</h1>
-        <p className="text-base font-semibold font-display">{company}</p>
-        <hr className="border-0 h-0.5 bg-emerald-300 my-2" />
-        <p>{message}</p>
-        <p>{title}</p>
-        <p>{email}</p>
+
+      {/* 본문내용 */}
+      <div className="flex-1">
+        <div className="">
+          {/* 유저이름 시간 */}
+          <div className="flex items-center">
+            <h3 className="text-lg font-bold mr-2">유저이름</h3>
+            <span className="text-sm text-neutral-500 tracking-tighter">
+              오후 0: 00
+            </span>
+          </div>
+
+          {/* 이미지 */}
+          <div className="flex">
+            <figure className="max-w-sm mb-4">
+              <figcaption>{fileName}</figcaption>
+              <img
+                className="w-full max-h-80 object-scale-down"
+                src={url}
+                alt="profile photo"
+              />
+            </figure>
+          </div>
+
+          <p className="leading-7">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci
+            deleniti sapiente dicta, sunt cumque maxime quia. Labore veritatis,
+            repudiandae beatae hic maxime sequi dicta dolore placeat distinctio
+            praesentium voluptas dolor.
+          </p>
+        </div>
       </div>
     </li>
   );

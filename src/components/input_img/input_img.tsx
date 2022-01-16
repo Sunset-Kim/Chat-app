@@ -7,11 +7,14 @@ const InputImg: React.FC<InputImgProps> = ({ onUpdate }) => {
   // ref
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const onClick: ReactEventHandler<HTMLButtonElement> = () =>
+  const onClick: ReactEventHandler<HTMLButtonElement> = e => {
+    e.preventDefault();
     inputRef.current?.click();
+  };
 
   // onchage
   const onChange: ReactEventHandler<HTMLInputElement> = e => {
+    e.preventDefault();
     const file = e.currentTarget.files && e.currentTarget.files[0];
     if (!file) return;
 

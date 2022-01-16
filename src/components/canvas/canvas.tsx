@@ -49,6 +49,7 @@ const Canvas = () => {
   const drawImg = (ref: React.RefObject<HTMLCanvasElement>) => {
     if (!backImg) return;
     const ctx = ref.current?.getContext('2d');
+    ctx?.clearRect(0, 0, 300, 300);
     ctx?.drawImage(backImg, 0, 0, 300, 300);
   };
 
@@ -62,24 +63,27 @@ const Canvas = () => {
     ctx.lineWidth = 1;
     ctx.fillStyle = 'white';
     ctx.strokeStyle = 'black';
-
     ctx.fillText(text, 150, 230, 300);
     ctx.strokeText(text, 150, 230, 300);
   };
 
-  const onUpload: SubmitHandler<any> = async (data: any) => {
+  const onUpload: SubmitHandler<any> = (data: any) => {
     if (!canvasTextRef.current) return;
     const ctx = canvasTextRef.current.getContext('2d');
     if (!ctx || !backImg) return;
     ctx.globalCompositeOperation = 'destination-over';
+    drawText(canvasTextRef, text);
     ctx.drawImage(backImg, 0, 0, 300, 300);
-    const result = canvasTextRef.current.toDataURL('images/jpeg');
+
+    const save = confirm('저장합니다 아시겠어요?');
+    if (!save) return;
+    const result = canvasTextRef.current.toDataURL('image/jpeg');
     console.log(result);
     setCanvasURL(result);
-    await storageService.uploadImg(result, uuid());
-    // 업로드 후
-    ctx.clearRect(0, 0, 300, 300);
-    drawText(canvasTextRef, text);
+    storageService.uploadImg(result, uuid()).then(() => {
+      ctx.clearRect(0, 0, 300, 300);
+      drawText(canvasTextRef, text);
+    });
   };
 
   useEffect(() => {
@@ -125,7 +129,6 @@ const Canvas = () => {
               onChange={onTextChange}
             />
             <InputImg onUpdate={onUpdate} />
-
             <button
               className="btn-md btn-primary rounded-full py-1 mt-2 bg-rose-500"
               type="submit"
