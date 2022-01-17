@@ -25,7 +25,7 @@ const Canvas = () => {
   // state
   const [text, setText] = useState<string>('');
   const [fileURL, setFileURL] = useState<string | ArrayBuffer>('');
-  const [backImg, setBackImg] = useState<HTMLImageElement>();
+  const [backImg, setBackImg] = useState<HTMLImageElement | undefined>();
   const [uploadImg, setUploadImg] = useState('');
   const { handleSubmit } = useForm();
 
@@ -55,9 +55,9 @@ const Canvas = () => {
   };
 
   const drawImg = (ref: React.RefObject<HTMLCanvasElement>) => {
-    if (!backImg) return;
     const ctx = ref.current?.getContext('2d');
     ctx?.clearRect(0, 0, 300, 300);
+    if (!backImg) return;
     ctx?.drawImage(backImg, 0, 0, 300, 300);
   };
 
@@ -107,7 +107,13 @@ const Canvas = () => {
       createAt: Date.now().toString(),
     };
 
-    storeService.uploadImages(imageData).then(() => alert('저장성공'));
+    storeService.uploadImages(imageData).then(() => {
+      alert('저장성공');
+      setText('');
+      setFileURL('');
+      setBackImg(undefined);
+      setUploadImg('');
+    });
   };
 
   useEffect(() => {
@@ -150,7 +156,12 @@ const Canvas = () => {
         <div className="border-2 border-rose-500 w-full p-2 rounded">
           <form onSubmit={handleSubmit(onUpload)}>
             <label htmlFor="text1">첫줄</label>
-            <input type="text" className="input" onChange={onTextChange} />
+            <input
+              type="text"
+              className="input"
+              onChange={onTextChange}
+              value={text}
+            />
             <InputImg onUpdate={onUpdate} />
             <button
               className="btn-md btn-primary rounded-full py-1 mt-2 bg-rose-500"
