@@ -17,6 +17,7 @@ const Router = () => {
           <Route index element={<Preview />}></Route>
           <Route path="maker" element={<Canvas />} />
           <Route path="storage" element={<CardStorage />} />
+          <Route path="chat" element={<Preview />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/uitest" element={<UItest />} />

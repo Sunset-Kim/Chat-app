@@ -1,19 +1,25 @@
+import { QuerySnapshot } from 'firebase/firestore';
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState, Snapshot } from 'recoil';
 import Header from '../../components/header/header';
 import Lnb from '../../components/lnb/lnb';
-import { DatabaseService } from '../../services/card_repository';
+import StoreServices from '../../services/fire_store';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
-import { cardsAtom, CardsDatabase } from '../../state/data';
+import { chatAtom } from '../../state/data';
 
 const Home = () => {
-  const navigate = useNavigate();
+  // services
+  const store = new StoreServices();
   const authService = useRecoilValue(authServiceAtom);
-  const [user, setUser] = useRecoilState(userAtom);
+
+  // recoil
   const userId = useRecoilValue(userIdAtom);
-  const database = new DatabaseService();
-  const [cards, setCards] = useRecoilState(cardsAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  const [chat, setChat] = useRecoilState<any>(chatAtom);
+
+  // hook
+  const navigate = useNavigate();
 
   const onLogout = () => {
     authService.logout().then(result => {
@@ -22,8 +28,9 @@ const Home = () => {
     });
   };
 
-  const onUpdate = (value: CardsDatabase) => {
-    setCards(value);
+  const onUpdate = (value: QuerySnapshot) => {
+    const chatList = value.docs.map(item => item.data());
+    setChat(chatList);
   };
 
   // useEffect
@@ -36,7 +43,7 @@ const Home = () => {
   // 02. realtime database
   useEffect(() => {
     if (!userId) return;
-    const syncFunc = database.syncCards(userId, onUpdate);
+    const syncFunc = store.readSyncChat(userId, onUpdate);
 
     return () => {
       syncFunc();
@@ -51,10 +58,6 @@ const Home = () => {
         <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-2 text-neutral-800">
           <Outlet />
         </div>
-
-        {/* <aside className="absolute bottom-0 left-0 w-full h-fit">
-          <InputCard />
-        </aside> */}
       </main>
     </div>
   );

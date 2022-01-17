@@ -97,6 +97,13 @@ const Canvas = () => {
     });
   };
 
+  const reset = () => {
+    setText('');
+    setFileURL('');
+    setBackImg(undefined);
+    setUploadImg('');
+  };
+
   const storageUpload = async () => {
     if (!userID) return;
     const results = await storageService.uploadImg(uploadImg, uuid());
@@ -109,10 +116,7 @@ const Canvas = () => {
 
     storeService.uploadImages(imageData).then(() => {
       alert('저장성공');
-      setText('');
-      setFileURL('');
-      setBackImg(undefined);
-      setUploadImg('');
+      reset();
     });
   };
 

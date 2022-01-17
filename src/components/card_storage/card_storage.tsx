@@ -1,4 +1,5 @@
 import { QuerySnapshot } from 'firebase/firestore';
+import { Variants, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import StoreServices from '../../services/fire_store';
@@ -16,21 +17,49 @@ const CardStorage = () => {
 
   useEffect(() => {
     if (!userID) return;
-    console.log('실행ㅇ');
     const sync = storeService.readSyncImages(userID, onUpdate);
-
     return () => {
       sync();
     };
   }, []);
 
+  const boxVariants: Variants = {
+    initial: {
+      opacity: 1,
+    },
+
+    animate: {
+      opacity: 1,
+    },
+
+    exit: {
+      top: -10,
+      opacity: 0,
+    },
+
+    hover: {
+      scale: 1.2,
+      transition: {
+        type: 'spring',
+        damping: 1,
+        mass: 0.5,
+        duration: 0.6,
+      },
+    },
+  };
+
   return (
-    <div>
-      {item.map(s => (
-        <div key={s.createAt}>
-          <span>{s.createAt}</span>
-          <img src={s.imgURL} alt="안녕" />
-        </div>
+    <div className="grid p-3 gap-3 grid-cols-4 lg:grid-cols-8 ">
+      {item.map((s, i) => (
+        <motion.div
+          className="rounded overflow-hidden"
+          key={s.createAt}
+          variants={boxVariants}
+          whileHover="hover"
+          initial="initial"
+        >
+          <img className="block w-full h-full" src={s.imgURL} alt="안녕" />
+        </motion.div>
       ))}
     </div>
   );

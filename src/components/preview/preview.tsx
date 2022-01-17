@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useRecoilValue } from 'recoil';
-import { localCardsAtom } from '../../state/data';
+import { chatAtom } from '../../state/data';
 import Card from '../card/card';
+import PopupChat from '../popup_chat/popup_chat';
 
 const Preview = () => {
-  const cards = useRecoilValue(localCardsAtom);
+  const chatList = useRecoilValue(chatAtom);
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    if (!messageEndRef.current) return;
+    messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatList]);
 
   return (
-    <ul className="w-full h-full relative">
-      {cards &&
-        Object.values(cards).map(card => (
-          <Card key={card.id} card={card}></Card>
-        ))}
-    </ul>
+    <>
+      <div className="relative w-full h-full">
+        <ul className="w-full h-full relative">
+          {chatList &&
+            chatList.map(item => <Card key={item.createAt} chat={item}></Card>)}
+          <div ref={messageEndRef} />
+        </ul>
+      </div>
+      <PopupChat />
+    </>
   );
 };
 
