@@ -7,30 +7,38 @@ import React, {
   useCallback,
 } from 'react';
 import { v1 as uuid } from 'uuid';
-import { FieldValue, SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import StorageService from '../../services/storage';
 import InputImg from '../input_img/input_img';
-
+import { getDownloadURL } from 'firebase/storage';
+import { useRecoilValue } from 'recoil';
+import { userIdAtom } from '../../state/auth';
+import StoreService from '../../services/fire_store';
 const Canvas = () => {
   // service
   const storageService = new StorageService();
+  const storeService = new StoreService();
+
+  // recoil value
+  const userID = useRecoilValue(userIdAtom);
 
   // state
   const [text, setText] = useState<string>('');
   const [fileURL, setFileURL] = useState<string | ArrayBuffer>('');
   const [backImg, setBackImg] = useState<HTMLImageElement>();
-  const [canvasURL, setCanvasURL] = useState<undefined | string>();
-  const { register, handleSubmit } = useForm();
+  const [uploadImg, setUploadImg] = useState('');
+  const { handleSubmit } = useForm();
 
+  // ref
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasTextRef = useRef<HTMLCanvasElement>(null);
 
+  // custom function
   const onUpdate = useCallback(
     (url: string | ArrayBuffer) => setFileURL(url),
     [],
   );
 
-  // text change
   const onTextChange: ReactEventHandler<HTMLInputElement> = e =>
     setText(e.currentTarget.value);
 
@@ -67,23 +75,39 @@ const Canvas = () => {
     ctx.strokeText(text, 150, 230, 300);
   };
 
-  const onUpload: SubmitHandler<any> = (data: any) => {
-    if (!canvasTextRef.current) return;
+  const onUpload: SubmitHandler<any> = async (data: any) => {
+    if (!canvasTextRef.current || !userID) return;
     const ctx = canvasTextRef.current.getContext('2d');
     if (!ctx || !backImg) return;
     ctx.globalCompositeOperation = 'destination-over';
     drawText(canvasTextRef, text);
     ctx.drawImage(backImg, 0, 0, 300, 300);
 
+    // 확인
     const save = confirm('저장합니다 아시겠어요?');
     if (!save) return;
-    const result = canvasTextRef.current.toDataURL('image/jpeg');
-    console.log(result);
-    setCanvasURL(result);
-    storageService.uploadImg(result, uuid()).then(() => {
-      ctx.clearRect(0, 0, 300, 300);
-      drawText(canvasTextRef, text);
+    const base64 = canvasTextRef.current.toDataURL('image/jpeg');
+    setUploadImg(prev => {
+      if (prev === base64) {
+        alert('같은파일');
+        return prev;
+      } else {
+        return base64;
+      }
     });
+  };
+
+  const storageUpload = async () => {
+    if (!userID) return;
+    const results = await storageService.uploadImg(uploadImg, uuid());
+    const imgURL = await getDownloadURL(results.ref);
+    const imageData = {
+      userID: userID,
+      imgURL,
+      createAt: Date.now().toString(),
+    };
+
+    storeService.uploadImages(imageData).then(() => alert('저장성공'));
   };
 
   useEffect(() => {
@@ -97,6 +121,10 @@ const Canvas = () => {
   useEffect(() => {
     drawText(canvasTextRef, text);
   }, [text]);
+
+  useEffect(() => {
+    storageUpload();
+  }, [uploadImg]);
 
   return (
     <section className="flex w-full h-full">
@@ -122,12 +150,7 @@ const Canvas = () => {
         <div className="border-2 border-rose-500 w-full p-2 rounded">
           <form onSubmit={handleSubmit(onUpload)}>
             <label htmlFor="text1">첫줄</label>
-            <input
-              id="text1"
-              type="text"
-              className="input"
-              onChange={onTextChange}
-            />
+            <input type="text" className="input" onChange={onTextChange} />
             <InputImg onUpdate={onUpdate} />
             <button
               className="btn-md btn-primary rounded-full py-1 mt-2 bg-rose-500"
