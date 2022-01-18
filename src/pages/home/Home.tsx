@@ -64,12 +64,12 @@ const Home = () => {
   return (
     <div className="w-full h-full">
       <Header onLogin={onLogin} onLogout={onLogout} onProfile={onProfile} />
-      {/* <main className="w-full h-full flex pt-[60px] overflow-hidden">
+      <main className="w-full h-full flex pt-[60px] overflow-hidden">
         <Lnb />
         <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-2 text-neutral-800">
           <Outlet />
         </div>
-      </main> */}
+      </main>
 
       <AnimatePresence exitBeforeEnter>
         {isLoginOpen && <PopupLogin onClose={() => setIsLoginOpen(false)} />}

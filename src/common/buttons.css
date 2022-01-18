@@ -60,4 +60,8 @@
   .input-error {
     @apply text-rose-700 text-xs mt-1;
   }
+
+  .nav {
+    @apply mb-4 rounded bg-rose-500 hover:bg-rose-800 transition-colors;
+  }
 }
