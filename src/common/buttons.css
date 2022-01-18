@@ -58,6 +58,6 @@
   }
 
   .input-error {
-    @apply invisible text-rose-700 text-xs mt-1;
+    @apply text-rose-700 text-xs mt-1;
   }
 }

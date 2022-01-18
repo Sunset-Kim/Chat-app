@@ -5,6 +5,7 @@ import { AnimatePresence, motion, Variants } from 'framer-motion';
 import styles from './popup_login.module.css';
 import Login from '../login/login';
 import Join from '../join/join';
+import { storeAtom } from '../../state/data';
 
 interface PopupProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ const tabcontent = [
 const PopupLogin: React.FC<PopupProps> = ({ onClose }) => {
   // service
   const authService = useRecoilValue(authServiceAtom);
+  const storeService = useRecoilValue(storeAtom);
   // recoil
   const setUser = useSetRecoilState(userAtom);
 
@@ -27,18 +29,17 @@ const PopupLogin: React.FC<PopupProps> = ({ onClose }) => {
     const loginType = e.currentTarget.dataset.login as 'google' | 'github';
     authService
       .loginSocial(loginType)
-      ?.then(result => {
-        setUser(result.user);
-        localStorage.setItem('user', JSON.stringify(result.user));
+      ?.then(({ user }) => {
+        setUser(user);
+        storeService.setProfile(
+          user.uid,
+          user.displayName ?? 'default',
+          user.photoURL ?? '',
+        );
+        localStorage.setItem('user', JSON.stringify(user));
       })
       .catch(error => console.log('로그인 에러', error));
   };
-
-  useEffect(() => {
-    authService.onAuthChange(user => {
-      setUser(user);
-    });
-  }, []);
 
   const popupVariants: Variants = {
     init: {

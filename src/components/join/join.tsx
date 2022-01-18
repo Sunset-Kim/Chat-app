@@ -2,10 +2,13 @@ import { motion } from 'framer-motion';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
+
 import { authServiceAtom } from '../../state/auth';
+import { storeAtom } from '../../state/data';
 
 const Join = () => {
   const authServices = useRecoilValue(authServiceAtom);
+  const storeSevices = useRecoilValue(storeAtom);
   const { register, handleSubmit, formState, setError } = useForm();
 
   const onSubmit: SubmitHandler<HTMLFormElement> = data => {
@@ -16,7 +19,19 @@ const Join = () => {
         { message: '비밀번호가 서로 맞지 않습니다.' },
         { shouldFocus: true },
       );
-    authServices.join(data.email, data.password);
+
+    authServices
+      .join(data.email, data.password)
+      .then(result => {
+        const id = result.user.uid;
+        const name = result.user.displayName ?? 'default';
+        const img = result.user.photoURL ?? '';
+        storeSevices.setProfile(id, name as string, img);
+      })
+      .catch(error => {
+        const message = error.message;
+        setError('entire', { message });
+      });
   };
 
   return (
@@ -95,6 +110,16 @@ const Join = () => {
             className="input-error pl-1"
           >
             {formState.errors.passwordConfirm.message}
+          </motion.p>
+        ) : null}
+
+        {formState.errors.entire?.message ? (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="input-error pl-1"
+          >
+            {formState.errors.entire.message}
           </motion.p>
         ) : null}
       </div>

@@ -9,14 +9,10 @@ const Login = () => {
   const { register, handleSubmit, formState, setError } = useForm();
 
   const onSubmit: SubmitHandler<HTMLFormElement> = data => {
-    authServices
-      .login(data.email, data.password)
-      .then(console.log)
-      .catch(error => {
-        console.log(error, error.code, error.message);
-        const errorMessage = error.message;
-        setError('entire', { message: errorMessage });
-      });
+    authServices.login(data.email, data.password).catch(error => {
+      const errorMessage = error.message;
+      setError('entire', { message: errorMessage });
+    });
   };
 
   return (

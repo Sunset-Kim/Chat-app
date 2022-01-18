@@ -7,6 +7,7 @@ import {
   User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from 'firebase/auth';
 import { auth } from './firebase';
 
@@ -53,7 +54,15 @@ class AuthServices {
   }
 
   join(email: string, password: string) {
-    createUserWithEmailAndPassword(auth, email, password);
+    return createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  changeProfile(displayName: string, photoURL: string) {
+    if (!auth.currentUser) return;
+    return updateProfile(auth.currentUser, {
+      displayName,
+      photoURL,
+    });
   }
 }
 
