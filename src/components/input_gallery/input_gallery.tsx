@@ -49,7 +49,7 @@ const InputGallery: React.FC<InputGalleryProps> = ({ onUpdate }) => {
     <>
       <button
         onClick={toggleOpen}
-        className="btn-primary rounded-full btn-md py-1 px-2"
+        className="btn-md btn-primary rounded-full py-1"
       >
         이미지 선택
       </button>

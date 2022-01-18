@@ -32,7 +32,7 @@ const InputImg: React.FC<InputImgProps> = ({ onUpdate }) => {
       <input ref={inputRef} onChange={onChange} accept="image/*" type="file" />
       <button
         onClick={onClick}
-        className="btn-md btn-primary rounded-full py-1 mt-2"
+        className="btn-md btn-primary rounded-full py-1 h-full"
       >
         파일업로드
       </button>
