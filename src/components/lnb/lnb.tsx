@@ -1,20 +1,42 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faImage,
+  faCommentDots,
+  faImages,
+} from '@fortawesome/free-regular-svg-icons';
 
 const Lnb = () => {
   return (
-    <nav className="bg-fuchsia-900 w-24 p-6 border-r border-t border-neutral-100/50">
-      {/* 탭 */}
+    <nav className="bg-sky-500 w-24 p-6 border-r border-t border-neutral-100/50">
       <ul>
-        <li className="mb-4 rounded bg-rose-500">
-          <a className="block w-12 h-12" href="#none">
-            d
-          </a>
+        {/* 채팅 */}
+        <li className="mb-4 rounded bg-sky-700">
+          <Link
+            to="/"
+            className="w-12 h-12 flex items-center justify-center text-3xl"
+          >
+            <FontAwesomeIcon icon={faCommentDots} />
+          </Link>
         </li>
-
-        <li className="mb-4 rounded bg-rose-500">
-          <a className="block w-12 h-12" href="#none">
-            d
-          </a>
+        {/* 메이커 */}
+        <li className="mb-4 rounded bg-sky-700">
+          <Link
+            to="/maker"
+            className="w-12 h-12 flex items-center justify-center text-3xl"
+          >
+            <FontAwesomeIcon icon={faImage} />
+          </Link>
+        </li>
+        {/* 생성기 */}
+        <li className="mb-4 rounded bg-sky-700">
+          <Link
+            to="/gallery"
+            className="w-12 h-12 flex items-center justify-center text-3xl"
+          >
+            <FontAwesomeIcon icon={faImages} />
+          </Link>
         </li>
       </ul>
     </nav>
