@@ -131,13 +131,11 @@ const Canvas = () => {
 
   return (
     <>
-      <h1 className="text-center font-bold text-2xl mb-4 font-myengjo">
-        짤 만들기
-      </h1>
-      <section className="flex flex-col w-full h-full md:flex-row">
-        <div className="relative shrink-0 basis-[350px] h-full mr-4 flex items-center flex-col">
+      <h1 className="text-center font-bold text-2xl mb-4">짤 만들기</h1>
+      <section className="flex flex-col w-full h-full items-center md:flex-row md:items-start">
+        <div className="relative basis-[300px] min-w-[300px] min-h-[300px] max-w-[500px] max-h-[500px] flex items-center flex-col md:mr-4">
           <h2 className="text-center font-bold text-lg mb-2">미리보기</h2>
-          <div className="relative w-[500px] h-[500px] border-2 border-rose-400 rounded bg-black">
+          <div className="relative flex-1 w-full max-w-[500px] max-h-[500px] border-4 border-rose-300 rounded bg-black">
             {backImg && (
               <img
                 className="absolute top-0 left-0 w-full h-full z-0"
@@ -158,7 +156,7 @@ const Canvas = () => {
             ></canvas>
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full flex-1">
           <h2 className="text-center font-bold text-lg mb-2">프리셋</h2>
           <div className="border-2 border-rose-500 w-full p-2 rounded">
             <form onSubmit={handleSubmit(onUpload)}>
