@@ -125,7 +125,7 @@ const Join = () => {
       </div>
 
       <button
-        className="block btn-md btn-primary rounded-sm mb-2 bg-rose-500"
+        className="block btn-md btn-primary rounded-sm mb-2 bg-amber-500"
         type="submit"
       >
         Create Account

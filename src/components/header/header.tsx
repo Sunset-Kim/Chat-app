@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onLogin, onProfile }) => {
     },
   };
   return (
-    <header className="fixed w-full h-[60px] flex items-center px-4 bg-rose-300 z-10">
+    <header className="fixed w-full h-[60px] flex items-center px-4 bg-amber-300 z-10">
       <div className="flex items-center">
         <div className="w-12 h-12 mr-3">
           <svg viewBox="0 0 512 512">
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onLogin, onProfile }) => {
           <button
             onClick={onToggleMenu}
             className={`rounded-ful w-10 h-10 rounded-full ${
-              !isOpen ? `bg-rose-500` : `bg-rose-900`
+              !isOpen ? `bg-amber-500` : `bg-amber-900`
             }`}
           >
             <FontAwesomeIcon icon={faUserCog} />
@@ -96,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onLogin, onProfile }) => {
       ) : (
         <motion.div className="absolute right-4">
           <button
-            className="w-10 h-10 rounded-full bg-rose-900"
+            className="w-10 h-10 rounded-full bg-amber-900"
             onClick={onLogin}
           >
             <FontAwesomeIcon icon={faSignInAlt} />

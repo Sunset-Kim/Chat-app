@@ -93,7 +93,7 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
               {profile.name} 님의 프로필정보
             </h2>
             <span className="text-sm font-semibold ">프로필 이미지</span>
-            <div className="flex items-end mb-2 border border-rose-400 p-2 rounded-xl">
+            <div className="flex items-end mb-2 border border-amber-400 p-2 rounded-xl">
               <img
                 className="w-24 h-24 rounded-full mr-2"
                 src={imgURL ? imgURL : profile.img}
@@ -119,7 +119,7 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
               />
             </div>
 
-            <button className="bg-rose-600 btn-primary btn-md" type="submit">
+            <button className="bg-amber-600 btn-primary btn-md" type="submit">
               업데이트
             </button>
           </form>
@@ -132,7 +132,7 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
               exit={{ opacity: 0 }}
               className="fixed flex justify-center items-center top-0 left-0 bottom-0 right-0 bg-neutral-900/75"
             >
-              <div className="border-8 border-rose-600 border-t-rose-50 w-16 h-16 rounded-full animate-spin"></div>
+              <div className="border-8 border-amber-600 border-t-amber-50 w-16 h-16 rounded-full animate-spin"></div>
             </motion.div>
           )}
         </div>

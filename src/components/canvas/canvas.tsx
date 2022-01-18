@@ -135,7 +135,7 @@ const Canvas = () => {
       <section className="flex flex-col w-full h-full items-center md:flex-row md:items-start">
         <div className="relative basis-[300px] min-w-[300px] min-h-[300px] max-w-[500px] max-h-[500px] flex items-center flex-col md:mr-4">
           <h2 className="text-center font-bold text-lg mb-2">미리보기</h2>
-          <div className="relative flex-1 w-full max-w-[500px] max-h-[500px] border-4 border-rose-300 rounded bg-black">
+          <div className="relative flex-1 w-full max-w-[500px] max-h-[500px] border-4 border-amber-300 rounded bg-black">
             {backImg && (
               <img
                 className="absolute top-0 left-0 w-full h-full z-0"
@@ -158,7 +158,7 @@ const Canvas = () => {
         </div>
         <div className="w-full flex-1">
           <h2 className="text-center font-bold text-lg mb-2">프리셋</h2>
-          <div className="border-2 border-rose-500 w-full p-2 rounded">
+          <div className="border-2 border-amber-500 w-full p-2 rounded">
             <form onSubmit={handleSubmit(onUpload)}>
               <label>
                 <span>첫줄</span>
@@ -183,7 +183,7 @@ const Canvas = () => {
 
               <InputImg onUpdate={onUpdate} />
               <button
-                className="btn-md btn-primary rounded-full py-1 mt-2 bg-rose-500"
+                className="btn-md btn-primary rounded-full py-1 mt-2 bg-amber-500"
                 type="submit"
               >
                 저장하기

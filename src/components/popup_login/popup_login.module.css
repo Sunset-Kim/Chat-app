@@ -3,9 +3,9 @@
 }
 
 .selected {
-  @apply bg-rose-400 text-white;
+  @apply bg-amber-400 text-white;
 }
 
 .underline {
-  @apply absolute -bottom-[1px] left-0 right-0 h-[2px] bg-rose-800;
+  @apply absolute -bottom-[1px] left-0 right-0 h-[2px] bg-amber-800;
 }

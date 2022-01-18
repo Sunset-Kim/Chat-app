@@ -19,7 +19,7 @@ const InputCard = () => {
   };
 
   return (
-    <div className="bg-rose-500 p-4">
+    <div className="bg-amber-500 p-4">
       <h1 className="mb-3">게시물 올리기</h1>
       <form onSubmit={handleSubmit(onUpload, onError)}>
         <div className="flex">

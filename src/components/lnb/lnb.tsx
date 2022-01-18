@@ -12,11 +12,11 @@ const Lnb = () => {
   const match = useMatch('/:page');
 
   return (
-    <nav className="bg-rose-300 w-fit py-4 px-4 border-r border-t border-neutral-100/50">
+    <nav className="bg-amber-300 w-fit py-4 px-4 border-r border-t border-neutral-100/50">
       <ul>
         {/* 채팅 */}
         <li
-          className={`nav ${match?.params.page === null ? `bg-rose-800` : ''}`}
+          className={`nav ${match?.params.page === null ? `bg-amber-800` : ''}`}
         >
           <Link
             to="/"
@@ -28,7 +28,7 @@ const Lnb = () => {
         {/* 메이커 */}
         <li
           className={`nav ${
-            match?.params.page === 'maker' ? `bg-rose-800` : ''
+            match?.params.page === 'maker' ? `bg-amber-800` : ''
           }`}
         >
           <Link
@@ -41,7 +41,7 @@ const Lnb = () => {
         {/* 생성기 */}
         <li
           className={`nav ${
-            match?.params.page === 'gallery' ? `bg-rose-800` : ''
+            match?.params.page === 'gallery' ? `bg-amber-800` : ''
           }`}
         >
           <Link

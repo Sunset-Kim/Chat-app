@@ -91,7 +91,7 @@ const PopupChat = () => {
       {!isOpen && (
         <motion.button
           layoutId="chat"
-          className="fixed right-2 bottom-2 w-16 h-16 bg-rose-400 text-white text-3xl rounded-full"
+          className="fixed right-2 bottom-2 w-16 h-16 bg-amber-400 text-white text-3xl rounded-full"
           onClick={toggleOpen}
         >
           <FontAwesomeIcon icon={faCommentDots} />
@@ -101,7 +101,7 @@ const PopupChat = () => {
       {isOpen && (
         <motion.div
           layoutId="chat"
-          className="fixed w-full max-h-[200px] bottom-0 left-0 h-fit p-2 bg-rose-300 border-t border-t-rose-200"
+          className="fixed w-full max-h-[200px] bottom-0 left-0 h-fit p-2 bg-amber-300 border-t border-t-amber-200"
         >
           {/* 클로즈 버튼 */}
           <button

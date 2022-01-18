@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ chat }) => {
       {/* 프로필 이미지 */}
       <div className="h-12 w-12 mr-2 flex-row-reverse">
         <img
-          className="block w-full h-full object-scale-down object-center bg-rose-200 rounded"
+          className="block w-full h-full object-scale-down object-center bg-amber-200 rounded"
           src={img ?? DEFAULT_IMG}
           onError={onError}
           alt="profile"

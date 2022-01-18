@@ -2,19 +2,19 @@
 @layer components {
   /* color */
   .btn-primary {
-    @apply bg-rose-600 text-neutral-100 shadow-sm
-    transition-colors hover:bg-rose-800;
+    @apply bg-amber-600 text-neutral-100 shadow-sm
+    transition-colors hover:bg-amber-800;
   }
 
   .btn-secondary {
-    @apply bg-violet-500 text-zinc-50 hover:bg-rose-700 shadow-sm
+    @apply bg-violet-500 text-zinc-50 hover:bg-amber-700 shadow-sm
     transition-colors;
   }
 
   /* state */
   .btn-ghost {
-    @apply bg-transparent border border-rose-800 text-rose-800 font-semibold
-    hover:bg-rose-800 hover:text-neutral-100 transition-colors;
+    @apply bg-transparent border border-amber-800 text-amber-800 font-semibold
+    hover:bg-amber-800 hover:text-neutral-100 transition-colors;
   }
 
   .btn-outline {
@@ -40,8 +40,8 @@
 
   /* input */
   .input {
-    @apply block w-full px-3 py-2 rounded-md text-sm shadow-sm bg-white border border-rose-500 text-neutral-800
-    placeholder:text-rose-800/75
+    @apply block w-full px-3 py-2 rounded-md text-sm shadow-sm bg-white border border-amber-500 text-neutral-800
+    placeholder:text-amber-800/75
     focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-400
     disabled:bg-neutral-300 disabled:text-neutral-800/50 disabled:border-neutral-400 disabled:shadow-none disabled:placeholder:text-neutral-800/50
     invalid:border-red-400 invalid:text-red-600 focus:invalid:border-red-400 focus:invalid:ring-red-500;
@@ -58,10 +58,10 @@
   }
 
   .input-error {
-    @apply text-rose-700 text-xs mt-1;
+    @apply text-amber-700 text-xs mt-1;
   }
 
   .nav {
-    @apply mb-4 rounded bg-rose-500 hover:bg-rose-800 transition-colors;
+    @apply mb-4 rounded bg-amber-500 hover:bg-amber-800 transition-colors;
   }
 }

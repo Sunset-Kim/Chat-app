@@ -13,7 +13,7 @@ const ProfileLine: React.FC<ProfileLineProps> = ({ text }) => {
   if (user) {
     return (
       <div className="flex items-center">
-        <div className="w-12 h-12 rounded bg-rose-600 overflow-hidden mr-2">
+        <div className="w-12 h-12 rounded bg-amber-600 overflow-hidden mr-2">
           <img
             className="w-full h-full"
             src={user.photoURL ?? `images/default_logo.png`}
