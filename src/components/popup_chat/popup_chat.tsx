@@ -91,7 +91,7 @@ const PopupChat = () => {
       {!isOpen && (
         <motion.button
           layoutId="chat"
-          className="fixed right-2 bottom-2 w-16 h-16 bg-rose-500 text-white text-3xl rounded-full"
+          className="fixed right-2 bottom-2 w-16 h-16 bg-rose-400 text-white text-3xl rounded-full"
           onClick={toggleOpen}
         >
           <FontAwesomeIcon icon={faCommentDots} />
@@ -101,7 +101,7 @@ const PopupChat = () => {
       {isOpen && (
         <motion.div
           layoutId="chat"
-          className="fixed w-full bottom-0 left-0 h-fit p-2 bg-rose-500"
+          className="fixed w-full max-h-[200px] bottom-0 left-0 h-fit p-2 bg-rose-300 border-t border-t-rose-200"
         >
           {/* 클로즈 버튼 */}
           <button
@@ -115,7 +115,7 @@ const PopupChat = () => {
             {/* 텍스트 */}
             <div className="flex mb-2">
               {/* 미리보기 */}
-              <div className="relative w-[150px] h-[150px] shrink-0 grow-0 mr-4">
+              <div className="relative max-w-[100px] max-h-[100px] mr-4">
                 <canvas
                   className="w-full h-full"
                   ref={canvasRef}
@@ -134,12 +134,12 @@ const PopupChat = () => {
               </div>
 
               {/* 입력창 */}
-              <div className="flex-1">
+              <div className="flex-1 w-full h-full">
                 <textarea
                   {...register('message')}
-                  className="w-full h-full p-4"
+                  className="w-full h-full p-4 resize-none"
                   cols={20}
-                  rows={4}
+                  rows={3}
                 />
               </div>
             </div>
