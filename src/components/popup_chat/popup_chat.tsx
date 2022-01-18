@@ -2,16 +2,20 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRecoilValue } from 'recoil';
-import { userIdAtom } from '../../state/auth';
+import { userIdAtom, userProfileAtom } from '../../state/auth';
 import InputImg from '../input_img/input_img';
 import InputGallery from '../input_gallery/input_gallery';
 import StoreServices, { IChat } from '../../services/fire_store';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const PopupChat = () => {
   // services
   const storeService = new StoreServices();
   // recoil
   const userID = useRecoilValue(userIdAtom);
+  const userProfile = useRecoilValue(userProfileAtom);
 
   // state
   const [isOpen, setIsOpen] = useState(false); // popup open
@@ -67,13 +71,14 @@ const PopupChat = () => {
   };
 
   const onSubmit: SubmitHandler<HTMLFormElement> = async data => {
-    if (!userID) return;
+    if (!userID || !userProfile) return;
 
     const newChat: IChat = {
       userID,
       createAt: Date.now(),
       message: data.message,
       imgURL: uploadURL,
+      userProfile,
     };
 
     if (!newChat.message && !newChat.imgURL) return;
@@ -86,10 +91,10 @@ const PopupChat = () => {
       {!isOpen && (
         <motion.button
           layoutId="chat"
-          className="fixed right-2 bottom-2 w-16 h-16 bg-rose-500 rounded-full"
+          className="fixed right-2 bottom-2 w-16 h-16 bg-rose-500 text-white text-3xl rounded-full"
           onClick={toggleOpen}
         >
-          채팅
+          <FontAwesomeIcon icon={faCommentDots} />
         </motion.button>
       )}
 
@@ -100,58 +105,73 @@ const PopupChat = () => {
         >
           {/* 클로즈 버튼 */}
           <button
-            className="absolute -top-5 right-5 w-10 h-10 bg-white rounded-full"
+            className="absolute -top-5 right-5 w-10 h-10 bg-white text-2xl rounded-full"
             onClick={toggleOpen}
           >
-            클로즈
+            <FontAwesomeIcon icon={faTimes} />
           </button>
 
-          {/* 파일선택 */}
-          <ul className="flex mb-2">
-            <InputGallery onUpdate={onUpadteGallery} />
-            <InputImg onUpdate={onUpdate} />
-          </ul>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* 텍스트 */}
+            <div className="flex mb-2">
+              {/* 미리보기 */}
+              <div className="relative w-[150px] h-[150px] shrink-0 grow-0 mr-4">
+                <canvas
+                  className="w-full h-full"
+                  ref={canvasRef}
+                  width={300}
+                  height={300}
+                />
+                <img
+                  className="absolute top-0 left-0 w-full h-full"
+                  src={uploadURL}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = 'images/default_logo.png';
+                  }}
+                  alt="select img"
+                />
+              </div>
 
-          <form className="flex" onSubmit={handleSubmit(onSubmit)}>
-            {/* 미리보기 */}
-            <div className="relative w-[150px] h-[150px] shrink-0 grow-0 mr-4">
-              <canvas
-                className="w-full h-full"
-                ref={canvasRef}
-                width={300}
-                height={300}
-              />
-              <picture>
-                <source />
-              </picture>
-              <img
-                className="absolute top-0 left-0 w-full h-full"
-                src={uploadURL}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  console.log(currentTarget);
-                  currentTarget.src = 'images/default_logo.png';
-                }}
-                alt="select img"
-              />
-            </div>
-
-            {/* 입력창 */}
-            <div className="flex-1">
-              <textarea
-                {...register('message')}
-                className="w-full h-full p-4"
-                cols={20}
-                rows={4}
-              />
+              {/* 입력창 */}
+              <div className="flex-1">
+                <textarea
+                  {...register('message')}
+                  className="w-full h-full p-4"
+                  cols={20}
+                  rows={4}
+                />
+              </div>
             </div>
 
             {/* 전송 */}
-            <div>
-              <button onClick={onReset} type="reset">
-                리셋
-              </button>
-              <button type="submit">전송</button>
+            <div className="flex justify-between">
+              {/* 파일 업로드 */}
+              <ul className="flex ">
+                <InputGallery onUpdate={onUpadteGallery} />
+                <InputImg onUpdate={onUpdate} />
+              </ul>
+
+              {/* 데이터 업로드 */}
+              <ul className="flex">
+                <li>
+                  <button
+                    className="btn-md btn-ghost rounded-xl py-1"
+                    onClick={onReset}
+                    type="reset"
+                  >
+                    리셋
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="btn-md btn-ghost rounded-xl py-1"
+                    type="submit"
+                  >
+                    전송
+                  </button>
+                </li>
+              </ul>
             </div>
           </form>
         </motion.div>

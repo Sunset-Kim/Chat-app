@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { ReactEventHandler, useEffect, useState } from 'react';
 import { IChat } from '../../services/fire_store';
-import styles from './card.module.css';
+import dayjs from 'dayjs';
+import { userIdAtom } from '../../state/auth';
+import { useRecoilValue } from 'recoil';
+import { storeAtom } from '../../state/data';
 
 interface CardProps {
   chat: IChat;
@@ -9,14 +12,37 @@ interface CardProps {
 const DEFAULT_IMG = '/images/default_logo.png';
 
 const Card: React.FC<CardProps> = ({ chat }) => {
+  const store = useRecoilValue(storeAtom);
+  const ID = useRecoilValue(userIdAtom);
+  const [name, setName] = useState();
+  const [img, setImg] = useState();
+
   const { userID, message, imgURL, createAt } = chat;
+
+  useEffect(() => {
+    store.getProfile(userID).then(snapshot => {
+      if (!snapshot.exists()) return;
+      const profile = snapshot.data();
+      setName(profile.name);
+      setImg(profile.img);
+    });
+  }, [userID]);
+
+  // custom func
+  // scr가 없으면 default img로 교체
+  const onError: ReactEventHandler<HTMLImageElement> = ({ currentTarget }) => {
+    currentTarget.onerror = null;
+    currentTarget.src = DEFAULT_IMG;
+  };
+
   return (
-    <li className="flex">
+    <li className={`flex mb-3`}>
       {/* 프로필 이미지 */}
-      <div className="h-12 w-12 mr-2">
+      <div className="h-12 w-12 mr-2 flex-row-reverse">
         <img
           className="block w-full h-full object-scale-down object-center bg-rose-200 rounded"
-          src="/images/default_logo.png"
+          src={img ?? DEFAULT_IMG}
+          onError={onError}
           alt="profile"
         />
       </div>
@@ -25,27 +51,30 @@ const Card: React.FC<CardProps> = ({ chat }) => {
       <div className="flex-1">
         <div className="">
           {/* 유저이름 시간 */}
-          <div className="flex items-center">
-            <h3 className="text-lg font-bold mr-2">{userID}</h3>
+          <div className="flex flex-col mb-1 lg:flex-row lg:items-center">
+            <h3 className={`text-lg mr-2 ${userID === ID ? 'font-bold' : ''}`}>
+              {userID === ID ? `${name} (나)` : name}
+            </h3>
             <span className="text-sm text-neutral-500 tracking-tighter">
-              {createAt}
+              {dayjs(createAt).format('YYYY년 MM월 DD일 h:mm A')}
             </span>
           </div>
-
-          {/* 이미지 */}
-          {imgURL && (
-            <div className="flex">
-              <figure className="max-w-sm mb-4">
+          <div>
+            {/* 이미지 */}
+            {imgURL && (
+              <div className="flex w-[150px] h-[150px] rounded-lg overflow-hidden lg:w-[300px] lg:h-[300px] transition-all">
                 <img
-                  className="w-full max-h-80 object-scale-down"
+                  className="w-full h-full object-scale-down"
                   src={imgURL}
                   alt="message"
                 />
-              </figure>
-            </div>
-          )}
+              </div>
+            )}
 
-          {message && <p className="leading-7"> {message}</p>}
+            {message && (
+              <p className="leading-5 whitespace-pre-line"> {message}</p>
+            )}
+          </div>
         </div>
       </div>
     </li>
