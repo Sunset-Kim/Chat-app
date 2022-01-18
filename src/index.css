@@ -1,7 +1,6 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import './common/buttons.css';
-@import './common/input.css';
 @import 'tailwindcss/utilities';
 
 html,
@@ -11,7 +10,8 @@ body {
   min-width: 640px;
   margin: 0;
 
-  @apply font-body text-neutral-100 bg-neutral-100 min-h-full;
+  @apply font-body text-neutral-100 bg-neutral-100
+  min-h-full;
 }
 
 #root {
