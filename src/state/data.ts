@@ -1,5 +1,10 @@
 import { atom } from 'recoil';
-import { IChat } from '../services/fire_store';
+import StoreServices, { IChat } from '../services/fire_store';
+
+export const storeAtom = atom({
+  key: 'store',
+  default: new StoreServices(),
+});
 
 export const chatAtom = atom<IChat[]>({
   key: 'caht',

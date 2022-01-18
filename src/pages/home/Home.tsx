@@ -1,12 +1,15 @@
+import React, { useEffect, useState } from 'react';
 import { QuerySnapshot } from 'firebase/firestore';
-import React, { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router';
-import { useRecoilValue, useRecoilState, Snapshot } from 'recoil';
+import { AnimatePresence } from 'framer-motion';
+import { Outlet } from 'react-router';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import Header from '../../components/header/header';
 import Lnb from '../../components/lnb/lnb';
+import PopupLogin from '../../components/popup_login/popup_login';
 import StoreServices from '../../services/fire_store';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
 import { chatAtom } from '../../state/data';
+import PopupProfile from '../../components/popup_profile/popup_profile';
 
 const Home = () => {
   // services
@@ -17,10 +20,9 @@ const Home = () => {
   const userId = useRecoilValue(userIdAtom);
   const [user, setUser] = useRecoilState(userAtom);
   const [chat, setChat] = useRecoilState<any>(chatAtom);
-
-  // hook
-  const navigate = useNavigate();
-
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // custom func
   const onLogout = () => {
     authService.logout().then(result => {
       localStorage.setItem('user', '');
@@ -28,6 +30,8 @@ const Home = () => {
     });
   };
 
+  const onLogin = () => setIsLoginOpen(true);
+  const onProfile = () => setIsProfileOpen(true);
   const onUpdate = (value: QuerySnapshot) => {
     const chatList = value.docs.map(item => item.data());
     setChat(chatList);
@@ -35,30 +39,44 @@ const Home = () => {
 
   // useEffect
 
-  // 01 . login check
+  // 01. realtime database
   useEffect(() => {
-    authService.onAuthChange(user => !user && navigate('/login'));
-  }, [user]);
-
-  // 02. realtime database
-  useEffect(() => {
+    const syncFunc = store.readSyncChat(onUpdate);
     if (!userId) return;
-    const syncFunc = store.readSyncChat(userId, onUpdate);
-
     return () => {
       syncFunc();
     };
   }, [userId]);
 
+  // 02. loginPopup 지우기
+  useEffect(() => {
+    if (!userId) return;
+    setIsLoginOpen(false);
+  }, [userId]);
+
+  useEffect(() => {
+    authService.onAuthChange(user => {
+      console.log('유저체인지');
+      setUser(user);
+    });
+  }, []);
+
   return (
     <div className="w-full h-full">
-      <Header onLogout={onLogout} />
+      <Header onLogin={onLogin} onLogout={onLogout} onProfile={onProfile} />
       <main className="w-full h-full flex pt-14 overflow-hidden">
         <Lnb />
         <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-2 text-neutral-800">
           <Outlet />
         </div>
       </main>
+      {/* 팝업상단부 */}
+      <AnimatePresence exitBeforeEnter>
+        {isLoginOpen && <PopupLogin onClose={() => setIsLoginOpen(false)} />}
+        {isProfileOpen && (
+          <PopupProfile onClose={() => setIsProfileOpen(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

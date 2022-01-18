@@ -8,7 +8,10 @@ import {
   query,
   QuerySnapshot,
   getDocs,
+  updateDoc,
+  getDoc,
 } from 'firebase/firestore';
+import { IProfile } from '../state/auth';
 
 export interface ImageData {
   createAt: string;
@@ -21,6 +24,7 @@ export interface IChat {
   createAt: number;
   message: string;
   imgURL?: string;
+  userProfile: IProfile;
 }
 
 class StoreServices {
@@ -45,9 +49,20 @@ class StoreServices {
     return setDoc(ref, data);
   }
 
-  readSyncChat(userID: string, onUpdate: (value: QuerySnapshot) => void) {
+  readSyncChat(onUpdate: (value: QuerySnapshot) => void) {
     const q = collection(db, 'chat');
     return onSnapshot(q, onUpdate);
+  }
+
+  setProfile(userID: string, name: string, img?: string) {
+    const ref = doc(db, 'user', userID);
+    const profile = { name, img: img ?? '' };
+    return setDoc(ref, profile);
+  }
+
+  getProfile(userID: string) {
+    const ref = doc(db, 'user', userID);
+    return getDoc(ref);
   }
 }
 
