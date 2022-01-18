@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.16",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -51,8 +54,11 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
+    "@fortawesome/free-brands-svg-icons": "^5.15.4",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@types/uuid": "^8.3.4",
     "autoprefixer": "^10.4.2",
+    "dayjs": "^1.10.7",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
     "precss": "^4.0.0",
