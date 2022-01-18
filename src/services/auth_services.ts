@@ -3,13 +3,16 @@ import {
   GithubAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  getAuth,
   User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth } from './firebase';
 
 class AuthServices {
   // login
-  login(providerName: 'google' | 'github') {
+  loginSocial(providerName: 'google' | 'github') {
     // 1. provider 선택
     let authProvider;
     switch (providerName) {
@@ -30,6 +33,10 @@ class AuthServices {
     return signInWithPopup(auth, authProvider);
   }
 
+  login(email: string, password: string) {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
+
   // logout
   logout() {
     return auth.signOut();
@@ -43,6 +50,10 @@ class AuthServices {
     onAuthStateChanged(auth, user => {
       onUserChanged(user);
     });
+  }
+
+  join(email: string, password: string) {
+    createUserWithEmailAndPassword(auth, email, password);
   }
 }
 

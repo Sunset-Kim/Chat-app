@@ -1,0 +1,11 @@
+.tab {
+  @apply flex-1 text-center py-2 bg-neutral-200 rounded-t-lg relative transition-colors;
+}
+
+.selected {
+  @apply bg-rose-400 text-white;
+}
+
+.underline {
+  @apply absolute -bottom-[1px] left-0 right-0 h-[2px] bg-rose-800;
+}

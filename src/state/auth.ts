@@ -1,14 +1,13 @@
 import { atom, selector } from 'recoil';
 import AuthServices from '../services/auth_services';
 import { User } from 'firebase/auth';
-import { v1 as uuid } from 'uuid';
 
 const localUser = localStorage.getItem('user');
 const user = localUser && JSON.parse(localUser);
 
 export interface IProfile {
-  name: string;
-  img: string;
+  name?: string | null;
+  img?: string | null;
 }
 
 export const authServiceAtom = atom({
@@ -27,10 +26,14 @@ export const userIdAtom = selector({
   get: ({ get }) => get(userAtom)?.uid,
 });
 
-export const profileAtom = atom<IProfile>({
+export const userProfileAtom = selector({
   key: 'profile',
-  default: {
-    name: `default+${uuid()}`,
-    img: '',
+  get: ({ get }) => {
+    const user = get(userAtom);
+    if (!user) return;
+    return {
+      name: user.displayName ?? 'default',
+      img: user.photoURL,
+    };
   },
 });
