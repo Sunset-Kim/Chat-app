@@ -7,8 +7,16 @@ import InputImg from '../input_img/input_img';
 import InputGallery from '../input_gallery/input_gallery';
 import StoreServices, { IChat } from '../../services/fire_store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots } from '@fortawesome/free-regular-svg-icons';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCommentDots,
+  faImages,
+  faTrashAlt,
+} from '@fortawesome/free-regular-svg-icons';
+import {
+  faChevronDown,
+  faShare,
+  faUpload,
+} from '@fortawesome/free-solid-svg-icons';
 
 const PopupChat = () => {
   // services
@@ -71,6 +79,8 @@ const PopupChat = () => {
   };
 
   const onSubmit: SubmitHandler<HTMLFormElement> = async data => {
+    console.log(data);
+    console.log('실행');
     if (!userID || !userProfile) return;
 
     const newChat: IChat = {
@@ -105,17 +115,17 @@ const PopupChat = () => {
         >
           {/* 클로즈 버튼 */}
           <button
-            className="absolute -top-5 right-5 w-10 h-10 bg-white text-2xl rounded-full"
+            className="absolute -top-8 right-0 w-8 h-8 px-6 flex justify-center items-center bg-amber-300 text-xl rounded-t-lg text-amber-700 shadow-none hover:bg-amber-500"
             onClick={toggleOpen}
           >
-            <FontAwesomeIcon icon={faTimes} />
+            <FontAwesomeIcon icon={faChevronDown} />
           </button>
 
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* 텍스트 */}
-            <div className="flex mb-2">
+            {/* 이미지 미리보기 텍스트 입력부 */}
+            <div className="flex my-2 items-center justify-center">
               {/* 미리보기 */}
-              <div className="relative max-w-[100px] max-h-[100px] mr-4">
+              <div className="relative w-24 h-24 mr-4">
                 <canvas
                   className="w-full h-full"
                   ref={canvasRef}
@@ -136,41 +146,51 @@ const PopupChat = () => {
               {/* 입력창 */}
               <div className="flex-1 w-full h-full">
                 <textarea
+                  placeholder="메세지 히어"
                   {...register('message')}
-                  className="w-full h-full p-4 resize-none"
+                  className="textarea"
                   cols={20}
                   rows={3}
                 />
               </div>
             </div>
 
-            {/* 전송 */}
+            {/* 파일업로드 전송관련 */}
             <div className="flex justify-between">
-              {/* 파일 업로드 */}
-              <ul className="flex ">
-                <InputGallery onUpdate={onUpadteGallery} />
-                <InputImg onUpdate={onUpdate} />
-              </ul>
-
-              {/* 데이터 업로드 */}
+              {/* 폼 버튼 */}
               <ul className="flex">
                 <li>
                   <button
-                    className="btn-md btn-ghost rounded-xl py-1"
+                    className="mr-2 btn-secondary btn-md rounded-full bg-orange-300 translate-x-6"
                     onClick={onReset}
                     type="reset"
                   >
-                    리셋
+                    <FontAwesomeIcon icon={faTrashAlt} />
                   </button>
                 </li>
+
                 <li>
                   <button
-                    className="btn-md btn-ghost rounded-xl py-1"
+                    className="absolute right-4 bottom-16 w-10 h-10 btn-solid bg-amber-500 rounded-full"
                     type="submit"
                   >
-                    전송
+                    <FontAwesomeIcon icon={faShare} />
                   </button>
                 </li>
+              </ul>
+
+              {/* 파일 업로드 */}
+              <ul className="flex ">
+                <InputGallery
+                  onUpdate={onUpadteGallery}
+                  className="mr-2 btn-secondary btn-md rounded-full"
+                  buttonText={<FontAwesomeIcon icon={faImages} />}
+                />
+                <InputImg
+                  onUpdate={onUpdate}
+                  buttonText={<FontAwesomeIcon icon={faUpload} />}
+                  className="mr-2 btn-secondary btn-md rounded-full"
+                />
               </ul>
             </div>
           </form>

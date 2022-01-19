@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     fontFamily: {
       display: ['Pally', 'Comic Sans MS', 'sans-serif'],
-      body: ['Inter', 'system-ui', 'sans-serif'],
+      body: ['Spoqa Han Sans', 'Spoqa Han Sans JP', 'sans-serif'],
     },
     extend: {},
   },
