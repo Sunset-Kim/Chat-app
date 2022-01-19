@@ -4,7 +4,8 @@ import dayjs from 'dayjs';
 import { userIdAtom } from '../../state/auth';
 import { useRecoilValue } from 'recoil';
 import { storeAtom } from '../../state/data';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 interface CardProps {
   chat: IChat;
 }
@@ -18,6 +19,10 @@ const Card: React.FC<CardProps> = ({ chat }) => {
   const [img, setImg] = useState();
 
   const { userID, message, imgURL, createAt } = chat;
+
+  const onDelete = () => {
+    store.deleteChat(chat);
+  };
 
   useEffect(() => {
     store.getProfile(userID).then(snapshot => {
@@ -48,16 +53,28 @@ const Card: React.FC<CardProps> = ({ chat }) => {
       </div>
 
       {/* 본문내용 */}
-      <div className="flex-1">
+      <div className="flex-1 items-center">
         <div>
           {/* 유저이름 시간 */}
-          <div className="flex flex-col mb-2 lg:flex-row lg:items-center">
-            <h3 className={`text-lg mr-2 ${userID === ID ? 'font-bold' : ''}`}>
-              {userID === ID ? `${name} (나)` : name}
-            </h3>
-            <span className="text-sm text-neutral-500 tracking-tighter">
-              {dayjs(createAt).format('YYYY년 MM월 DD일 h:mm A')}
-            </span>
+          <div className="flex">
+            <div className="flex flex-col mb-2 lg:flex-row lg:items-center">
+              <h3
+                className={`text-lg mr-2 ${userID === ID ? 'font-bold' : ''}`}
+              >
+                {userID === ID ? `${name} (나)` : name}
+              </h3>
+              <span className="text-sm text-neutral-500 tracking-tighter">
+                {dayjs(createAt).format('YYYY년 MM월 DD일 h:mm A')}
+              </span>
+            </div>
+            {ID === userID ? (
+              <button
+                className="ml-2 w-fit h-fit btn-secondary px-2 py-1 rounded-full text-sm"
+                onClick={() => onDelete()}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </button>
+            ) : null}
           </div>
 
           {/* 메세지 */}

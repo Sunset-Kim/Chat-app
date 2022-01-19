@@ -6,13 +6,16 @@ import React, {
   useCallback,
 } from 'react';
 import { v1 as uuid } from 'uuid';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import StorageService from '../../services/storage';
 import InputImg from '../input_img/input_img';
 import { getDownloadURL } from 'firebase/storage';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userIdAtom } from '../../state/auth';
 import StoreService from '../../services/fire_store';
+import PopupConfirm from '../popup_confirm/popup_confirm';
+import { AnimatePresence } from 'framer-motion';
+import { isUploadingAtom } from '../../state/uploader';
 
 const Canvas = () => {
   // service
@@ -21,12 +24,16 @@ const Canvas = () => {
 
   // recoil value
   const userID = useRecoilValue(userIdAtom);
+  const setIsUploading = useSetRecoilState(isUploadingAtom);
 
   // state
   const [text, setText] = useState<string>('첫번째줄 입니다');
   const [text2, setText2] = useState<string>('두번째줄 입니다');
   const [backImg, setBackImg] = useState<HTMLImageElement | undefined>();
   const [uploadImg, setUploadImg] = useState('');
+  const [isConfirm, setIsConfirm] = useState(false);
+
+  // react-hook-form
   const { handleSubmit } = useForm();
 
   // ref
@@ -85,11 +92,8 @@ const Canvas = () => {
     ctx?.drawImage(backImg, 0, 0, 500, 500);
   };
 
-  const onUpload: SubmitHandler<any> = async (data: any) => {
+  const onUpload = () => {
     if (!canvasTextRef.current || !userID) return;
-    // 확인
-    const save = confirm('저장합니다 아시겠어요?');
-    if (!save) return;
     drawImg();
     drawText(canvasTextRef, 400);
     const base64 = canvasTextRef.current.toDataURL('image/jpeg');
@@ -110,8 +114,8 @@ const Canvas = () => {
 
   const storageUpload = async (uploadImg: string) => {
     if (!userID) return;
+    setIsUploading(true);
     const results = await storageService.uploadImg(uploadImg, uuid());
-
     const imgURL = await getDownloadURL(results.ref);
     const imageData = {
       userID: userID,
@@ -119,10 +123,17 @@ const Canvas = () => {
       createAt: Date.now().toString(),
     };
 
-    storeService.uploadImages(imageData).then(() => {
-      alert('저장성공');
-      reset();
-    });
+    await storeService.uploadImages(imageData);
+    reset();
+    setIsUploading(false);
+  };
+
+  // confirm modal 관련
+  const onOpen = () => setIsConfirm(true);
+  const onClose = () => setIsConfirm(false);
+  const onValid = () => {
+    onClose();
+    onUpload();
   };
 
   useEffect(() => {
@@ -131,6 +142,10 @@ const Canvas = () => {
 
   return (
     <>
+      <AnimatePresence>
+        {isConfirm && <PopupConfirm onClose={onClose} onValid={onValid} />}
+      </AnimatePresence>
+
       <h1 className="text-center font-bold text-2xl mb-4">짤 만들기</h1>
       <section className="flex flex-col w-full h-full items-center md:flex-row md:items-start">
         {/* 미리보기 */}
@@ -162,7 +177,7 @@ const Canvas = () => {
         <div className="w-full flex-1">
           <h2 className="text-center font-bold text-lg mb-2">프리셋</h2>
           <div className="border-2 border-amber-500 w-full p-2 rounded">
-            <form onSubmit={handleSubmit(onUpload)}>
+            <form onSubmit={handleSubmit(onOpen)}>
               <label className="mb-2">
                 <span>첫줄</span>
                 <input

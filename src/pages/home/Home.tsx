@@ -10,6 +10,8 @@ import StoreServices from '../../services/fire_store';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
 import { chatAtom } from '../../state/data';
 import PopupProfile from '../../components/popup_profile/popup_profile';
+import Loading from '../../components/loading/loading';
+import { isUploadingAtom } from '../../state/uploader';
 
 const Home = () => {
   // services
@@ -17,6 +19,7 @@ const Home = () => {
   const authService = useRecoilValue(authServiceAtom);
 
   // recoil
+  const isUploading = useRecoilValue(isUploadingAtom);
   const userId = useRecoilValue(userIdAtom);
   const [user, setUser] = useRecoilState(userAtom);
   const [chat, setChat] = useRecoilState<any>(chatAtom);
@@ -62,22 +65,25 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-full h-full">
-      <Header onLogin={onLogin} onLogout={onLogout} onProfile={onProfile} />
-      <main className="w-full h-full flex pt-[60px] overflow-hidden">
-        <Lnb />
-        <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-4 text-neutral-800">
-          <Outlet />
-        </div>
-      </main>
+    <>
+      {isUploading && <Loading />}
+      <div className="w-full h-full">
+        <Header onLogin={onLogin} onLogout={onLogout} onProfile={onProfile} />
+        <main className="w-full h-full flex pt-[60px] overflow-hidden">
+          <Lnb />
+          <div className="w-full overflow-x-hidden overflow-y-auto bg-neutral-100 p-4 text-neutral-800">
+            <Outlet />
+          </div>
+        </main>
 
-      <AnimatePresence exitBeforeEnter>
-        {isLoginOpen && <PopupLogin onClose={() => setIsLoginOpen(false)} />}
-        {isProfileOpen && (
-          <PopupProfile onClose={() => setIsProfileOpen(false)} />
-        )}
-      </AnimatePresence>
-    </div>
+        <AnimatePresence exitBeforeEnter>
+          {isLoginOpen && <PopupLogin onClose={() => setIsLoginOpen(false)} />}
+          {isProfileOpen && (
+            <PopupProfile onClose={() => setIsProfileOpen(false)} />
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   );
 };
 

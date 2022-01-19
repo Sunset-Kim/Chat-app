@@ -10,6 +10,7 @@ import {
   getDocs,
   updateDoc,
   getDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import { IProfile } from '../state/auth';
 
@@ -29,8 +30,13 @@ export interface IChat {
 
 class StoreServices {
   uploadImages(data: ImageData) {
-    const ref = collection(db, 'images', 'jjal', data.userID);
-    return addDoc(ref, data);
+    const ref = doc(db, 'images', 'jjal', data.userID, data.createAt);
+    return setDoc(ref, data);
+  }
+
+  deleteImages(userID: string, createAt: string) {
+    const ref = doc(db, 'images', 'jjal', userID, createAt);
+    return deleteDoc(ref);
   }
 
   readSyncImages(userID: string, onUpdate: (value: QuerySnapshot) => void) {
@@ -47,6 +53,11 @@ class StoreServices {
   uploadChat(data: IChat) {
     const ref = doc(db, 'chat', data.createAt.toString());
     return setDoc(ref, data);
+  }
+
+  deleteChat(data: IChat) {
+    const ref = doc(db, 'chat', data.createAt.toString());
+    return deleteDoc(ref);
   }
 
   readSyncChat(onUpdate: (value: QuerySnapshot) => void) {
