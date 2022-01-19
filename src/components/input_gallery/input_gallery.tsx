@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactEventHandler, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../state/auth';
@@ -7,9 +7,15 @@ import StoreServices from '../../services/fire_store';
 
 interface InputGalleryProps {
   onUpdate: (imgURL: string) => void;
+  className?: string;
+  buttonText?: string | JSX.Element;
 }
 
-const InputGallery: React.FC<InputGalleryProps> = ({ onUpdate }) => {
+const InputGallery: React.FC<InputGalleryProps> = ({
+  onUpdate,
+  className,
+  buttonText,
+}) => {
   // recoil
   const user = useRecoilValue(userAtom);
 
@@ -22,7 +28,12 @@ const InputGallery: React.FC<InputGalleryProps> = ({ onUpdate }) => {
   const [data, setData] = useState<any>();
 
   // custom func
-  const toggleOpen = () => setIsOpen(prev => !prev);
+  const toggleOpen: ReactEventHandler<
+    HTMLButtonElement | HTMLDivElement
+  > = e => {
+    e.preventDefault();
+    setIsOpen(prev => !prev);
+  };
   const onClick = (imgURL: string) => {
     // 이미지 url을 상위로 전달
     onUpdate(imgURL);
@@ -49,9 +60,9 @@ const InputGallery: React.FC<InputGalleryProps> = ({ onUpdate }) => {
     <>
       <button
         onClick={toggleOpen}
-        className="btn-md btn-primary rounded-full py-1"
+        className={className ?? 'btn-md btn-primary rounded-full py-1'}
       >
-        이미지 선택
+        {buttonText ?? '이미지선택'}
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -63,24 +74,25 @@ const InputGallery: React.FC<InputGalleryProps> = ({ onUpdate }) => {
           >
             <div
               onClick={toggleOpen}
-              className="absolute z-0 left-0 right-0 top-0 bottom-0 bg-black/50"
+              className="absolute z-0 left-0 right-0 top-0 bottom-0 bg-black/75"
             />
-            <div className="relative flex flex-col bg-neutral-200 w-96 h-96 rounded-md">
-              <div className="m-2 mb-0 pb-2 border-b-2 border-sky-300">
+            <div className="relative flex flex-col bg-amber-100 w-96 h-96 rounded-lg">
+              <div className="m-4 mb-0 pb-2 border-b-2 border-amber-400">
                 <ProfileLine text=" 갤러리" />
               </div>
-              <div className="flex-1 overflow-y-auto p-2 scrollbar-hide">
+              <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
                 <div className="relative grid grid-cols-3 gap-2">
                   {isLoading
                     ? 'loading....'
                     : data.map((item: any) => (
                         <motion.div
+                          className="border-2 border-amber-500 rounded-lg overflow-hidden"
                           onClick={() => onClick(item.imgURL)}
                           key={item.createAt}
-                          whileHover={{ scale: 1.1 }}
+                          whileHover={{ scale: 1.2 }}
                         >
                           <img
-                            className="w-full h-full"
+                            className="block w-full h-full object-cover"
                             src={item.imgURL}
                             alt="user created"
                           />
