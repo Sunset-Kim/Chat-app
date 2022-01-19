@@ -37,7 +37,7 @@ const InputCard = () => {
               <div>
                 <img
                   className="w-full h-full"
-                  src="/images/default_logo.png"
+                  src="./images/default_logo.png"
                   alt=""
                 />
               </div>

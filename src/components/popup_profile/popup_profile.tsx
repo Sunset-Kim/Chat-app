@@ -102,7 +102,7 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
                     src={imgURL ? imgURL : profile.img}
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null;
-                      currentTarget.src = 'images/default_logo.png';
+                      currentTarget.src = './images/default_logo.png';
                     }}
                     alt="user profile"
                   />

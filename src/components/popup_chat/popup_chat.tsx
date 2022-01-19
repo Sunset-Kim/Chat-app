@@ -137,7 +137,7 @@ const PopupChat = () => {
                   src={uploadURL}
                   onError={({ currentTarget }) => {
                     currentTarget.onerror = null;
-                    currentTarget.src = 'images/default_logo.png';
+                    currentTarget.src = './images/default_logo.png';
                   }}
                   alt="select img"
                 />

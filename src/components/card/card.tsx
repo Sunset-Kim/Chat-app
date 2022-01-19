@@ -10,7 +10,7 @@ interface CardProps {
   chat: IChat;
 }
 
-const DEFAULT_IMG = '/images/default_logo.png';
+const DEFAULT_IMG = './images/default_logo.png';
 
 const Card: React.FC<CardProps> = ({ chat }) => {
   const store = useRecoilValue(storeAtom);

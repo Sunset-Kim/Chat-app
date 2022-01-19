@@ -14,7 +14,7 @@ const ImgLoading: React.FC<ImgLoadingProps> = ({ src, alt }) => {
         className={`absolute z-10 top-0 left-0 w-full h-full object-cover transition-all blur-sm scale-110 ${
           isLoading ? '' : 'opacity-0'
         }`}
-        src="images/default_logo.png"
+        src="./images/default_logo.png"
         alt="loading..."
       />
 

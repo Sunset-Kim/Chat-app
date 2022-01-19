@@ -15,7 +15,7 @@ const ProfileLine: React.FC<ProfileLineProps> = ({ text }) => {
         <div className="w-14 h-14 rounded-full bg-amber-600 overflow-hidden mr-2">
           <img
             className="w-full h-full"
-            src={user.photoURL ?? `images/default_logo.png`}
+            src={user.photoURL ?? `./images/default_logo.png`}
             alt="user profile"
           />
         </div>

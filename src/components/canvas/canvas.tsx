@@ -160,7 +160,7 @@ const Canvas = () => {
                 src={backImg?.src ?? ''}
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null;
-                  currentTarget.src = 'images/default_logo.png';
+                  currentTarget.src = './images/default_logo.png';
                 }}
                 ref={imgRef}
               />
