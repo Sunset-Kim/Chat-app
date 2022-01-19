@@ -56,6 +56,7 @@ const InputFile: React.FC<InputFileProps> = ({ fileName, onFileChange }) => {
         accept="image/*"
         onChange={onChange}
         className="hidden"
+        size={1000}
       />
 
       <button

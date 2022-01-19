@@ -109,7 +109,7 @@ const PopupLogin: React.FC<PopupProps> = ({ onClose }) => {
                   Google Login
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   type="button"
                   className="block w-full btn-md btn-ghost rounded-full"
@@ -118,7 +118,7 @@ const PopupLogin: React.FC<PopupProps> = ({ onClose }) => {
                 >
                   Github Login
                 </button>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

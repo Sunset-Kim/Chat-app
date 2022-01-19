@@ -1,10 +1,12 @@
 import React, { ReactEventHandler, useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { authServiceAtom, userIdAtom } from '../../state/auth';
 import { storeAtom } from '../../state/data';
 import InputImg from '../input_img/input_img';
-import { imageUploadeAtom } from '../../state/uploader';
+import { imageUploadeAtom, isUploadingAtom } from '../../state/uploader';
 import { motion, Variants } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
 
 interface PopupProps {
   onClose: () => void;
@@ -15,9 +17,9 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
   const storeService = useRecoilValue(storeAtom);
   const storageService = useRecoilValue(imageUploadeAtom);
   const userID = useRecoilValue(userIdAtom);
+  const setUploading = useSetRecoilState(isUploadingAtom);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState<any>();
   const [imgURL, setImgURL] = useState<undefined | string>();
 
@@ -36,11 +38,10 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
 
   const onSubmit: ReactEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
-    setUploading(true);
     if (!userID) return;
+    setUploading(true);
     // 이미지 업로드
     const uploadImg = await storageService.upload(imgURL as any);
-
     // 서버 데이터 베이스 업로드
     authService.changeProfile(
       nameRef.current?.value ?? profile.name,
@@ -51,6 +52,7 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
       nameRef.current?.value ?? profile.name,
       imgURL ? uploadImg.url : profile.img,
     );
+    onClose();
     setUploading(false);
   };
 
@@ -92,49 +94,49 @@ const PopupProfile: React.FC<PopupProps> = ({ onClose }) => {
             <h2 className="text-center text-lg font-bold mb-2">
               {profile.name} 님의 프로필정보
             </h2>
-            <span className="text-sm font-semibold ">프로필 이미지</span>
-            <div className="flex items-end mb-2 border border-amber-400 p-2 rounded-xl">
-              <img
-                className="w-24 h-24 rounded-full mr-2"
-                src={imgURL ? imgURL : profile.img}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  currentTarget.src = 'images/default_logo.png';
-                }}
-                alt="user profile"
-              />
+            <div className="flex items-center mb-4">
+              <div className="flex-1 mr-3">
+                <div className="border border-amber-400 p-2 rounded-lg text-center">
+                  <img
+                    className="w-24 h-24 mx-auto rounded-full mb-2"
+                    src={imgURL ? imgURL : profile.img}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null;
+                      currentTarget.src = 'images/default_logo.png';
+                    }}
+                    alt="user profile"
+                  />
 
-              <div className="h-fit">
-                <InputImg onUpdate={onUpdateImg} />
+                  <div className="h-fit">
+                    <InputImg
+                      onUpdate={onUpdateImg}
+                      className="btn-secondary py-1 w-full rounded-full"
+                      buttonText={<FontAwesomeIcon icon={faUpload} />}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-2">
+                <span className="text-sm font-semibold ">프로필 이름</span>
+                <input
+                  className="input"
+                  type="text"
+                  defaultValue={profile.name}
+                  ref={nameRef}
+                />
               </div>
             </div>
 
-            <div className="mb-2">
-              <span className="text-sm font-semibold ">프로필 이름</span>
-              <input
-                className="input"
-                type="text"
-                defaultValue={profile.name}
-                ref={nameRef}
-              />
+            <div>
+              <button
+                className="bg-amber-600 w-full btn-primary btn-md py-1 rounded"
+                type="submit"
+              >
+                업데이트
+              </button>
             </div>
-
-            <button className="bg-amber-600 btn-primary btn-md" type="submit">
-              업데이트
-            </button>
           </form>
-
-          {/* 업로드 spinner */}
-          {uploading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed flex justify-center items-center top-0 left-0 bottom-0 right-0 bg-neutral-900/75"
-            >
-              <div className="border-8 border-amber-600 border-t-amber-50 w-16 h-16 rounded-full animate-spin"></div>
-            </motion.div>
-          )}
         </div>
       )}
     </motion.section>
