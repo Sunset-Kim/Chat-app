@@ -8,10 +8,11 @@ import Lnb from '../../components/lnb/lnb';
 import PopupLogin from '../../components/popup_login/popup_login';
 import StoreServices from '../../services/fire_store';
 import { authServiceAtom, userAtom, userIdAtom } from '../../state/auth';
-import { chatAtom } from '../../state/data';
+import { chatAtom, errorAtom } from '../../state/data';
 import PopupProfile from '../../components/popup_profile/popup_profile';
 import Loading from '../../components/loading/loading';
 import { isUploadingAtom } from '../../state/uploader';
+import PopupError from '../../components/popup_error/popup_error';
 
 const Home = () => {
   // services
@@ -20,11 +21,15 @@ const Home = () => {
 
   // recoil
   const isUploading = useRecoilValue(isUploadingAtom);
+  const isError = useRecoilValue(errorAtom);
   const userId = useRecoilValue(userIdAtom);
   const [user, setUser] = useRecoilState(userAtom);
   const [chat, setChat] = useRecoilState<any>(chatAtom);
+
+  // state
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   // custom func
   const onLogout = () => {
     authService.logout().then(result => {
@@ -66,6 +71,7 @@ const Home = () => {
 
   return (
     <>
+      {isError && <PopupError />}
       {isUploading && <Loading />}
       <div className="w-full h-full">
         <Header onLogin={onLogin} onLogout={onLogout} onProfile={onProfile} />

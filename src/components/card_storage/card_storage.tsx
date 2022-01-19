@@ -50,7 +50,13 @@ const CardStorage = () => {
     };
   }, []);
 
-  return (
+  return !user?.uid ? (
+    <section>
+      <p className="text-lg font-semibold">
+        로그인 하시면 저장된 이미지를 확인할 수 있어요!
+      </p>
+    </section>
+  ) : (
     <section>
       {/* confirm */}
       <AnimatePresence>

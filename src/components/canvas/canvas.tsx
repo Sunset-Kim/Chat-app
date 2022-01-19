@@ -16,6 +16,7 @@ import StoreService from '../../services/fire_store';
 import PopupConfirm from '../popup_confirm/popup_confirm';
 import { AnimatePresence } from 'framer-motion';
 import { isUploadingAtom } from '../../state/uploader';
+import { errorAtom } from '../../state/data';
 
 const Canvas = () => {
   // service
@@ -25,6 +26,7 @@ const Canvas = () => {
   // recoil value
   const userID = useRecoilValue(userIdAtom);
   const setIsUploading = useSetRecoilState(isUploadingAtom);
+  const setError = useSetRecoilState(errorAtom);
 
   // state
   const [text, setText] = useState<string>('첫번째줄 입니다');
@@ -93,7 +95,7 @@ const Canvas = () => {
   };
 
   const onUpload = () => {
-    if (!canvasTextRef.current || !userID) return;
+    if (!userID || !canvasTextRef.current) return setError(true);
     drawImg();
     drawText(canvasTextRef, 400);
     const base64 = canvasTextRef.current.toDataURL('image/jpeg');
@@ -113,7 +115,7 @@ const Canvas = () => {
   };
 
   const storageUpload = async (uploadImg: string) => {
-    if (!userID) return;
+    if (!userID) return setError(true);
     setIsUploading(true);
     const results = await storageService.uploadImg(uploadImg, uuid());
     const imgURL = await getDownloadURL(results.ref);
@@ -149,7 +151,7 @@ const Canvas = () => {
       <h1 className="text-center font-bold text-2xl mb-4">짤 만들기</h1>
       <section className="flex flex-col w-full h-full items-center md:flex-row md:items-start">
         {/* 미리보기 */}
-        <div className="relative basis-[300px] min-w-[300px] min-h-[300px] max-w-[500px] max-h-[500px] flex items-center flex-col md:mr-4">
+        <div className="relative min-w-[320px] min-h-[320px] max-w-[500px] max-h-[500px] flex items-center flex-col md:mr-4">
           <h2 className="text-center font-bold text-lg mb-2">미리보기</h2>
           <div className="relative flex-1 w-full max-w-[500px] max-h-[500px] border-4 border-amber-300 rounded bg-black">
             {backImg && (
@@ -199,9 +201,12 @@ const Canvas = () => {
                 />
               </label>
 
-              <InputImg onUpdate={onUpdate} />
+              <InputImg
+                onUpdate={onUpdate}
+                className="btn-primary py-1 rounded-full px-2 font-semibold mr-2"
+              />
               <button
-                className="btn-md btn-secodary rounded-full py-1 mt-2 bg-amber-500"
+                className="btn-md btn-primary rounded-full py-1 mt-2 bg-amber-600"
                 type="submit"
               >
                 저장하기

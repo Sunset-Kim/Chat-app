@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userIdAtom, userProfileAtom } from '../../state/auth';
 import InputImg from '../input_img/input_img';
 import InputGallery from '../input_gallery/input_gallery';
@@ -17,6 +17,7 @@ import {
   faShare,
   faUpload,
 } from '@fortawesome/free-solid-svg-icons';
+import { errorAtom } from '../../state/data';
 
 const PopupChat = () => {
   // services
@@ -24,6 +25,7 @@ const PopupChat = () => {
   // recoil
   const userID = useRecoilValue(userIdAtom);
   const userProfile = useRecoilValue(userProfileAtom);
+  const setError = useSetRecoilState(errorAtom);
 
   // state
   const [isOpen, setIsOpen] = useState(false); // popup open
@@ -79,9 +81,7 @@ const PopupChat = () => {
   };
 
   const onSubmit: SubmitHandler<HTMLFormElement> = async data => {
-    console.log(data);
-    console.log('실행');
-    if (!userID || !userProfile) return;
+    if (!userID || !userProfile) return setError(true);
 
     const newChat: IChat = {
       userID,

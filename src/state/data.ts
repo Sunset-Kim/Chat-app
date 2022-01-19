@@ -10,3 +10,8 @@ export const chatAtom = atom<IChat[]>({
   key: 'caht',
   default: [],
 });
+
+export const errorAtom = atom({
+  key: 'error',
+  default: false,
+});

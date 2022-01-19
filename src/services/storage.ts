@@ -1,4 +1,4 @@
-import { deleteObject, ref, uploadBytes, uploadString } from 'firebase/storage';
+import { deleteObject, ref, uploadString } from 'firebase/storage';
 import { storage } from './firebase';
 
 class StorageService {
