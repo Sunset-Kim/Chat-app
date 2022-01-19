@@ -49,9 +49,9 @@ const Card: React.FC<CardProps> = ({ chat }) => {
 
       {/* 본문내용 */}
       <div className="flex-1">
-        <div className="">
+        <div>
           {/* 유저이름 시간 */}
-          <div className="flex flex-col mb-1 lg:flex-row lg:items-center">
+          <div className="flex flex-col mb-2 lg:flex-row lg:items-center">
             <h3 className={`text-lg mr-2 ${userID === ID ? 'font-bold' : ''}`}>
               {userID === ID ? `${name} (나)` : name}
             </h3>
@@ -59,20 +59,24 @@ const Card: React.FC<CardProps> = ({ chat }) => {
               {dayjs(createAt).format('YYYY년 MM월 DD일 h:mm A')}
             </span>
           </div>
+
+          {/* 메세지 */}
           <div>
+            {message && (
+              <p className="leading-5 whitespace-pre-line mb-2"> {message}</p>
+            )}
             {/* 이미지 */}
             {imgURL && (
-              <div className="flex w-[150px] h-[150px] rounded-lg overflow-hidden lg:w-[300px] lg:h-[300px] transition-all">
+              <details className="flex open:bg-amber-300 w-fit open:p-2 rounded-lg transition-all">
+                <summary className="text-sm border-b px-2 py-1 border-amber-600 text-neutral-800">
+                  이미지가 있습니다!
+                </summary>
                 <img
-                  className="w-full h-full object-scale-down"
+                  className="mt-2 w-[150px] h-[150px] rounded-lg border border-amber-600 overflow-hidden lg:w-[250px] lg:h-[250px] transition-all"
                   src={imgURL}
                   alt="message"
                 />
-              </div>
-            )}
-
-            {message && (
-              <p className="leading-5 whitespace-pre-line"> {message}</p>
+              </details>
             )}
           </div>
         </div>
