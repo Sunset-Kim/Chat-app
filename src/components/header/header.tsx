@@ -78,13 +78,13 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onLogin, onProfile }) => {
                 className="absolute top-14 right-0 w-fit h-fit"
               >
                 <button
-                  className="btn-primary rounded-full w-10 h-10 mb-2"
+                  className="btn-secondary rounded-full w-10 h-10 mb-2"
                   onClick={onProfile}
                 >
                   <FontAwesomeIcon icon={faUser} />
                 </button>
                 <button
-                  className="btn-primary w-10 h-10 btn-solid rounded-full "
+                  className="btn-secondary w-10 h-10 rounded-full "
                   onClick={onLogout}
                 >
                   <FontAwesomeIcon icon={faSignOutAlt} />

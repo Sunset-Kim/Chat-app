@@ -133,6 +133,7 @@ const Canvas = () => {
     <>
       <h1 className="text-center font-bold text-2xl mb-4">짤 만들기</h1>
       <section className="flex flex-col w-full h-full items-center md:flex-row md:items-start">
+        {/* 미리보기 */}
         <div className="relative basis-[300px] min-w-[300px] min-h-[300px] max-w-[500px] max-h-[500px] flex items-center flex-col md:mr-4">
           <h2 className="text-center font-bold text-lg mb-2">미리보기</h2>
           <div className="relative flex-1 w-full max-w-[500px] max-h-[500px] border-4 border-amber-300 rounded bg-black">
@@ -156,16 +157,18 @@ const Canvas = () => {
             ></canvas>
           </div>
         </div>
+
+        {/* 입력폼 */}
         <div className="w-full flex-1">
           <h2 className="text-center font-bold text-lg mb-2">프리셋</h2>
           <div className="border-2 border-amber-500 w-full p-2 rounded">
             <form onSubmit={handleSubmit(onUpload)}>
-              <label>
+              <label className="mb-2">
                 <span>첫줄</span>
                 <input
                   type="text"
                   name="첫줄"
-                  className="input"
+                  className="input mb-2"
                   onChange={onTextChange}
                   value={text}
                 />
@@ -183,7 +186,7 @@ const Canvas = () => {
 
               <InputImg onUpdate={onUpdate} />
               <button
-                className="btn-md btn-primary rounded-full py-1 mt-2 bg-amber-500"
+                className="btn-md btn-secodary rounded-full py-1 mt-2 bg-amber-500"
                 type="submit"
               >
                 저장하기
