@@ -8,9 +8,8 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-
-  @apply font-body text-neutral-100 bg-neutral-100
-  min-h-full;
+  padding: 0;
+  @apply font-body text-neutral-100 bg-neutral-100 min-h-full;
 }
 
 #root {
